@@ -1,0 +1,30 @@
+version: "3"
+
+services:
+  tileserver:
+    container_name: tileserver
+    image: maptiler/tileserver-gl:latest
+    volumes:
+      - "./data:/data"
+    ports:
+      - "8000:8080"
+  nominatim:
+    container_name: nominatim
+    image: mediagis/nominatim:5.1
+    ports:
+      - "8001:8080" # Do not change the second port, only the first before the colon
+    environment:
+      PBF_PATH: /nominatim/data/planet-latest.osm.pbf
+      NOMINATIM_PASSWORD: password
+      THREADS: 8
+    volumes:
+      - type: bind
+        source: ./data
+        target: /nominatim/data
+      - type: bind
+        source: /data/db
+        target: /var/lib/postgresql/16/main
+      - type: bind
+        source: /data/flatnode
+        target: /nominatim/flatnode
+    shm_size: 40gb
