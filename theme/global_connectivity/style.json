@@ -1,0 +1,114 @@
+{
+  "version": 8,
+  "name": "Global Connectivity",
+  "metadata": {
+    "maptiler:license": "https://www.maptiler.com/license/",
+    "maptiler:copyright": "Copyright 2024 Yuiseki Inc."
+  },
+  "sources": {
+    "global_connectivity": {
+      "type": "vector",
+      "url": "mbtiles://{global_connectivity}"
+    }
+  },
+  "glyphs": "https://fonts.tilehosting.com/{fontstack}/{range}.pbf",
+  "layers": [
+    {
+      "id": "background",
+      "type": "background",
+      "paint": {
+        "background-color": "#0c1021"
+      }
+    },
+    {
+      "id": "land",
+      "type": "fill",
+      "source": "global_connectivity",
+      "source-layer": "land",
+      "paint": {
+        "fill-color": "#182038"
+      }
+    },
+    {
+      "id": "ocean",
+      "type": "fill",
+      "source": "global_connectivity",
+      "source-layer": "ocean",
+      "paint": {
+        "fill-color": "#0c1021"
+      }
+    },
+    {
+      "id": "submarine_cable_glow",
+      "type": "line",
+      "source": "global_connectivity",
+      "source-layer": "submarine_cable",
+      "minzoom": 0,
+      "layout": {
+        "line-join": "round",
+        "line-cap": "round"
+      },
+      "paint": {
+        "line-color": "#00ffff",
+        "line-width": 2.5,
+        "line-opacity": 0.3
+      }
+    },
+    {
+      "id": "submarine_cable",
+      "type": "line",
+      "source": "global_connectivity",
+      "source-layer": "submarine_cable",
+      "minzoom": 0,
+      "layout": {
+        "line-join": "round",
+        "line-cap": "round"
+      },
+      "paint": {
+        "line-color": "#ffffff",
+        "line-width": 0.8,
+        "line-opacity": 0.8
+      }
+    },
+    {
+      "id": "major_ports",
+      "type": "symbol",
+      "source": "global_connectivity",
+      "source-layer": "major_ports",
+      "minzoom": 5,
+      "layout": {
+        "icon-image": "harbor-15",
+        "text-field": "{name}",
+        "text-font": ["Noto Sans Regular"],
+        "text-size": 10,
+        "text-anchor": "top",
+        "text-offset": [0, 0.8]
+      },
+      "paint": {
+        "text-color": "#a6c5e6",
+        "text-halo-color": "#0c1021",
+        "text-halo-width": 1
+      }
+    },
+    {
+      "id": "major_airports",
+      "type": "symbol",
+      "source": "global_connectivity",
+      "source-layer": "major_airports",
+      "minzoom": 5,
+      "layout": {
+        "icon-image": "airport-15",
+        "text-field": "{name}",
+        "text-font": ["Noto Sans Regular"],
+        "text-size": 10,
+        "text-anchor": "top",
+        "text-offset": [0, 0.8]
+      },
+      "paint": {
+        "text-color": "#a6c5e6",
+        "text-halo-color": "#0c1021",
+        "text-halo-width": 1
+      }
+    }
+  ]
+}

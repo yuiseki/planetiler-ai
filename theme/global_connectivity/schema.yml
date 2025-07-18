@@ -1,0 +1,110 @@
+# Defines the layers for the Global Connectivity theme.
+# This theme visualizes the arteries of modern civilization:
+# submarine cables (information), major ports (goods), and major airports (people).
+
+schema_name: "Global Connectivity"
+schema_description: "A map of global connections, showing submarine cables, major ports, and international airports."
+attribution: "<a href=\"https://www.openstreetmap.org/copyright\" target=\"_blank\">&copy; OpenStreetMap contributors</a>"
+
+# Define the data sources that the theme uses.
+sources:
+  osm:
+    type: osm
+    local_path: /data/planet-latest.osm.pbf
+
+  natural_earth:
+    type: geopackage
+    url: "https://naciscdn.org/naturalearth/packages/natural_earth_vector.gpkg.zip"
+    projection: EPSG:4326
+
+  submarine_cables:
+    type: geojson
+    url: https://www.submarinecablemap.com/api/v3/cable/cable-geo.json
+
+# Define the layers that the theme contains.
+layers:
+  # Background layers from Natural Earth, adapted from 'railways' theme for proper zoom levels.
+  - id: "land"
+    features:
+      - source: natural_earth
+        geometry: polygon
+        include_when:
+          '${ feature.source_layer }':
+            - ne_110m_land
+            - ne_50m_land
+            - ne_10m_land
+        min_zoom:
+          10:
+            '${ feature.source_layer }': [ ne_10m_land ]
+          5:
+            '${ feature.source_layer }': [ ne_50m_land ]
+          0:
+            '${ feature.source_layer }': [ ne_110m_land ]
+        max_zoom:
+          14:
+            '${ feature.source_layer }': [ ne_10m_land ]
+          9:
+            '${ feature.source_layer }': [ ne_50m_land ]
+          4:
+            '${ feature.source_layer }': [ ne_110m_land ]
+
+  - id: "ocean"
+    features:
+      - source: natural_earth
+        geometry: polygon
+        include_when:
+          '${ feature.source_layer }':
+            - ne_110m_ocean
+            - ne_50m_ocean
+            - ne_10m_ocean
+        min_zoom:
+          10:
+            '${ feature.source_layer }': [ ne_10m_ocean ]
+          5:
+            '${ feature.source_layer }': [ ne_50m_ocean ]
+          0:
+            '${ feature.source_layer }': [ ne_110m_ocean ]
+        max_zoom:
+          14:
+            '${ feature.source_layer }': [ ne_10m_ocean ]
+          9:
+            '${ feature.source_layer }': [ ne_50m_ocean ]
+          4:
+            '${ feature.source_layer }': [ ne_110m_ocean ]
+
+  # Global Connectivity Layers
+  - id: "submarine_cable"
+    features:
+      - source: submarine_cables
+        geometry: line
+        min_zoom: 0
+        attributes:
+          - key: name
+            value: '${ feature.tags.name }'
+          - key: id
+            value: '${ feature.tags.id }'
+
+  - id: "major_ports"
+    features:
+      - source: osm
+        geometry: point
+        min_zoom: 4
+        include_when:
+          harbour: port
+        attributes:
+          - key: name
+            value: '${ feature.tags.name }'
+
+  - id: "major_airports"
+    features:
+      - source: osm
+        geometry: point
+        min_zoom: 4
+        include_when:
+          aeroway: aerodrome
+          aerodrome: international
+        attributes:
+          - key: name
+            value: '${ feature.tags.name }'
+          - key: iata
+            value: '${ feature.tags.iata }'
