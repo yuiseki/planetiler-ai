@@ -1,0 +1,5 @@
+sources:
+  natural_earth:
+    type: geopackage
+    url: "https://naciscdn.org/naturalearth/packages/natural_earth_vector.gpkg.zip"
+    projection: EPSG:4326

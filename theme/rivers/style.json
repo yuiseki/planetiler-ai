@@ -1,0 +1,76 @@
+{
+  "version": 8,
+  "name": "Rivers Minimal",
+  "sources": {
+    "rivers": {
+      "type": "vector",
+      "url": "mbtiles://{rivers}"
+    }
+  },
+  "layers": [
+    {
+      "id": "background",
+      "type": "background",
+      "paint": {
+        "background-color": "#f0f0f0"
+      }
+    },
+    {
+      "id": "ocean",
+      "type": "fill",
+      "source": "rivers",
+      "source-layer": "ocean",
+      "paint": {
+        "fill-color": "#a0c8f0"
+      }
+    },
+    {
+      "id": "land",
+      "type": "fill",
+      "source": "rivers",
+      "source-layer": "land",
+      "paint": {
+        "fill-color": "#f0f0f0"
+      }
+    },
+    {
+      "id": "lakes",
+      "type": "fill",
+      "source": "rivers",
+      "source-layer": "lakes",
+      "paint": {
+        "fill-color": "#a0c8f0"
+      }
+    },
+    {
+      "id": "rivers_merged_line",
+      "type": "line",
+      "source": "rivers",
+      "source-layer": "rivers_merged",
+      "paint": {
+        "line-color": "#0000ff",
+        "line-width": 1
+      }
+    },
+    {
+      "id": "rivers_unmerged_line",
+      "type": "line",
+      "source": "rivers",
+      "source-layer": "rivers_unmerged",
+      "paint": {
+        "line-color": "#4682B4",
+        "line-width": 1
+      }
+    },
+    {
+      "id": "rivers_low_line",
+      "type": "line",
+      "source": "rivers",
+      "source-layer": "rivers_low",
+      "paint": {
+        "line-color": "#87CEEB",
+        "line-width": 1
+      }
+    }
+  ]
+}
