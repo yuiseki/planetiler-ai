@@ -3,11 +3,87 @@ schema_description: Railways (merged & un-merged lines, z0-14)
 attribution: <a href="https://www.openstreetmap.org/copyright" target="_blank">&copy; OpenStreetMap contributors</a>
 
 sources:
+  natural_earth:
+    type: geopackage
+    url: "https://naciscdn.org/naturalearth/packages/natural_earth_vector.gpkg.zip"
+    projection: EPSG:4326
   osm:
     type: osm
     local_path: /data/planet-latest.osm.pbf
 
 layers:
+  - id: land
+    features:
+      - source: natural_earth
+        geometry: polygon
+        include_when:
+          '${ feature.source_layer }':
+            - ne_110m_land
+            - ne_50m_land
+            - ne_10m_land
+        min_zoom:
+          10:
+            '${ feature.source_layer }': [ ne_10m_land ]
+          5:
+            '${ feature.source_layer }': [ ne_50m_land ]
+          0:
+            '${ feature.source_layer }': [ ne_110m_land ]
+        max_zoom:
+          14:
+            '${ feature.source_layer }': [ ne_10m_land ]
+          9:
+            '${ feature.source_layer }': [ ne_50m_land ]
+          4:
+            '${ feature.source_layer }': [ ne_110m_land ]
+
+  - id: ocean
+    features:
+      - source: natural_earth
+        geometry: polygon
+        include_when:
+          '${ feature.source_layer }':
+            - ne_110m_ocean
+            - ne_50m_ocean
+            - ne_10m_ocean
+        min_zoom:
+          10:
+            '${ feature.source_layer }': [ ne_10m_ocean ]
+          5:
+            '${ feature.source_layer }': [ ne_50m_ocean ]
+          0:
+            '${ feature.source_layer }': [ ne_110m_ocean ]
+        max_zoom:
+          14:
+            '${ feature.source_layer }': [ ne_10m_ocean ]
+          9:
+            '${ feature.source_layer }': [ ne_50m_ocean ]
+          4:
+            '${ feature.source_layer }': [ ne_110m_ocean ]
+
+  - id: lakes
+    features:
+      - source: natural_earth
+        geometry: polygon
+        include_when:
+          '${ feature.source_layer }':
+            - ne_110m_lakes
+            - ne_50m_lakes
+            - ne_10m_lakes
+        min_zoom:
+          10:
+            '${ feature.source_layer }': [ ne_10m_lakes ]
+          5:
+            '${ feature.source_layer }': [ ne_50m_lakes ]
+          0:
+            '${ feature.source_layer }': [ ne_110m_lakes ]
+        max_zoom:
+          14:
+            '${ feature.source_layer }': [ ne_10m_lakes ]
+          9:
+            '${ feature.source_layer }': [ ne_50m_lakes ]
+          4:
+            '${ feature.source_layer }': [ ne_110m_lakes ]
+
   - id: railways_low
     features:
       - source: osm

@@ -12,7 +12,34 @@
       "id": "background",
       "type": "background",
       "paint": {
-        "background-color": "#f0f0f0"
+        "background-color": "#a0c8f0"
+      }
+    },
+    {
+      "id": "ocean",
+      "type": "fill",
+      "source": "railways",
+      "source-layer": "ocean",
+      "paint": {
+        "fill-color": "#a0c8f0"
+      }
+    },
+    {
+      "id": "land",
+      "type": "fill",
+      "source": "railways",
+      "source-layer": "land",
+      "paint": {
+        "fill-color": "#f0f0f0"
+      }
+    },
+    {
+      "id": "lakes",
+      "type": "fill",
+      "source": "railways",
+      "source-layer": "lakes",
+      "paint": {
+        "fill-color": "#a0c8f0"
       }
     },
     {
