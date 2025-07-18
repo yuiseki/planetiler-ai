@@ -1,0 +1,151 @@
+{
+  "version": 8,
+  "name": "Disaster Prevention",
+  "metadata": {
+    "maptiler:license": "https://www.maptiler.com/license/",
+    "maptiler:copyright": "Copyright 2024 Yuiseki Inc."
+  },
+  "sources": {
+    "disaster_prevention": {
+      "type": "vector",
+      "url": "mbtiles://{disaster_prevention}"
+    }
+  },
+  "glyphs": "https://fonts.tilehosting.com/{fontstack}/{range}.pbf",
+  "layers": [
+    {
+      "id": "background",
+      "type": "background",
+      "paint": {
+        "background-color": "#f8f4f0"
+      }
+    },
+    {
+      "id": "land",
+      "type": "fill",
+      "source": "disaster_prevention",
+      "source-layer": "land",
+      "paint": {
+        "fill-color": "#f8f4f0"
+      }
+    },
+    {
+      "id": "ocean",
+      "type": "fill",
+      "source": "disaster_prevention",
+      "source-layer": "ocean",
+      "paint": {
+        "fill-color": "#d1e0e0"
+      }
+    },
+    {
+      "id": "lakes",
+      "type": "fill",
+      "source": "disaster_prevention",
+      "source-layer": "lakes",
+      "paint": {
+        "fill-color": "#d1e0e0"
+      }
+    },
+    {
+      "id": "shelter",
+      "type": "symbol",
+      "source": "disaster_prevention",
+      "source-layer": "shelter",
+      "layout": {
+        "icon-image": "circle-15",
+        "text-field": "{name}",
+        "text-font": ["Noto Sans Regular"],
+        "text-size": 12,
+        "text-anchor": "top",
+        "text-offset": [0, 0.8]
+      },
+      "paint": {
+        "icon-color": "#008000",
+        "text-color": "#333333",
+        "text-halo-color": "#ffffff",
+        "text-halo-width": 1
+      }
+    },
+    {
+      "id": "fire_station",
+      "type": "symbol",
+      "source": "disaster_prevention",
+      "source-layer": "fire_station",
+      "layout": {
+        "icon-image": "circle-15",
+        "text-field": "{name}",
+        "text-font": ["Noto Sans Regular"],
+        "text-size": 12,
+        "text-anchor": "top",
+        "text-offset": [0, 0.8]
+      },
+      "paint": {
+        "icon-color": "#ff0000",
+        "text-color": "#333333",
+        "text-halo-color": "#ffffff",
+        "text-halo-width": 1
+      }
+    },
+    {
+      "id": "police",
+      "type": "symbol",
+      "source": "disaster_prevention",
+      "source-layer": "police",
+      "layout": {
+        "icon-image": "circle-15",
+        "text-field": "{name}",
+        "text-font": ["Noto Sans Regular"],
+        "text-size": 12,
+        "text-anchor": "top",
+        "text-offset": [0, 0.8]
+      },
+      "paint": {
+        "icon-color": "#0000ff",
+        "text-color": "#333333",
+        "text-halo-color": "#ffffff",
+        "text-halo-width": 1
+      }
+    },
+    {
+      "id": "water_point",
+      "type": "symbol",
+      "source": "disaster_prevention",
+      "source-layer": "water_point",
+      "layout": {
+        "icon-image": "circle-11",
+        "text-field": "{name}",
+        "text-font": ["Noto Sans Regular"],
+        "text-size": 10,
+        "text-anchor": "top",
+        "text-offset": [0, 0.8]
+      },
+      "paint": {
+        "icon-color": "#4682b4",
+        "text-color": "#333333",
+        "text-halo-color": "#ffffff",
+        "text-halo-width": 1
+      }
+    },
+    {
+      "id": "heliport",
+      "type": "symbol",
+      "source": "disaster_prevention",
+      "source-layer": "heliport",
+      "layout": {
+        "icon-image": "circle-11",
+        "text-field": "{name}",
+        "text-font": ["Noto Sans Regular"],
+        "text-size": 10,
+        "text-anchor": "top",
+        "text-offset": [0, 0.8]
+      },
+      "paint": {
+        "icon-color": "#800080",
+        "text-color": "#333333",
+        "text-halo-color": "#ffffff",
+        "text-halo-width": 1
+      }
+    }
+  ]
+}

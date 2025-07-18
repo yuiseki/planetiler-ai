@@ -1,0 +1,99 @@
+# Defines the layers for the disaster prevention theme.
+# Based on the conventions found in existing schema files.
+
+schema_name: "Disaster Prevention"
+schema_description: "A theme for disaster prevention facilities, including shelters, fire stations, police stations, water points, and heliports."
+attribution: "<a href=\"https://www.openstreetmap.org/copyright\" target=\"_blank\">&copy; OpenStreetMap contributors</a>"
+
+# Define the data sources that the theme uses.
+sources:
+  osm:
+    type: osm
+    local_path: /data/planet-latest.osm.pbf
+  natural_earth:
+    type: shapefile
+    url: https://naturalearth.s3.amazonaws.com/50m_physical/ne_50m_land.zip
+
+# Define the layers that the theme contains.
+layers:
+  # Background layers from Natural Earth
+  - id: "land"
+    features:
+      - source: natural_earth
+        geometry: polygon
+        include_when:
+          '${ feature.source_layer }': ne_50m_land
+  - id: "ocean"
+    features:
+      - source: natural_earth
+        geometry: polygon
+        include_when:
+          '${ feature.source_layer }': ne_50m_ocean
+  - id: "lakes"
+    features:
+      - source: natural_earth
+        geometry: polygon
+        include_when:
+          '${ feature.source_layer }': ne_50m_lakes
+
+  # Disaster prevention facilities from OpenStreetMap
+  - id: "shelter"
+    features:
+      - source: osm
+        geometry: point
+        min_zoom: 10
+        include_when:
+          amenity: shelter
+        attributes:
+          - key: name
+            value: '${ feature.tags.name }'
+          - key: shelter_type
+            value: '${ feature.tags.shelter_type }'
+
+  - id: "fire_station"
+    features:
+      - source: osm
+        geometry: point
+        min_zoom: 10
+        include_when:
+          amenity: fire_station
+        attributes:
+          - key: name
+            value: '${ feature.tags.name }'
+
+  - id: "police"
+    features:
+      - source: osm
+        geometry: point
+        min_zoom: 10
+        include_when:
+          amenity: police
+        attributes:
+          - key: name
+            value: '${ feature.tags.name }'
+
+  - id: "water_point"
+    features:
+      - source: osm
+        geometry: point
+        min_zoom: 12
+        include_when:
+          any:
+            - amenity: water_point
+            - amenity: drinking_water
+        attributes:
+          - key: name
+            value: '${ feature.tags.name }'
+
+  - id: "heliport"
+    features:
+      - source: osm
+        geometry: point
+        min_zoom: 12
+        include_when:
+          any:
+            - aeroway: heliport
+            - aeroway: helipad
+        attributes:
+          - key: name
+            value: '${ feature.tags.name }'

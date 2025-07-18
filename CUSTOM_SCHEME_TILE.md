@@ -10,7 +10,86 @@
 
 ---
 
+## トラブルシューティング: よくある間違い
+
+Planetilerのスキーマ定義は非常に柔軟ですが、その分、特定の規約に従わないとエラーが発生しやすくなります。以下は、AIエージェントが陥りがちな間違いとその解決策です。
+
+1.  **`sources` の形式が違う (`Cannot deserialize... from Array value`)**
+    -   **問題**: `sources` を配列（リスト）で定義している。Planetilerはキーを持つマップ形式を期待します。
+    -   **解決策**: 各データソースの `name` をトップレベルのキーとして使用します。
+        ```yaml
+        # 誤り
+        sources:
+          - name: osm
+            type: osm
+            ...
+        # 正解
+        sources:
+          osm:
+            type: osm
+            ...
+        ```
+
+2.  **OSMファイルのパス指定が違う (`Unrecognized field "path"`)**
+    -   **問題**: OSMデータソースのパスを `path` で指定している。
+    -   **解決策**: 正しいキーは `local_path` です。
+        ```yaml
+        # 誤り
+        osm:
+          type: osm
+          path: /data/planet-latest.osm.pbf
+        # 正解
+        osm:
+          type: osm
+          local_path: /data/planet-latest.osm.pbf
+        ```
+
+3.  **レイヤー構造が違う (`Unrecognized field "source_layer"`)**
+    -   **問題**: `layers` の直下に `source` や `source_layer` を定義している。
+    -   **解決策**: 各レイヤー定義 (`id`) の中に `features` リストを作成し、その中で地物の詳細（`source`, `geometry`, `include_when` など）を定義します。`source_layer` は `features` のプロパティではなく、`include_when` の中で使用します。
+        ```yaml
+        # 誤り
+        - id: "land"
+          source: natural_earth
+          source_layer: "ne_50m_land"
+          geometry: polygon
+        # 正解
+        - id: "land"
+          features:
+            - source: natural_earth
+              geometry: polygon
+              include_when:
+                '${ feature.source_layer }': ne_50m_land
+        ```
+
+4.  **リモートソースの `type` が違う (`Cannot deserialize... from String "url"`)**
+    -   **問題**: URLから取得するデータソースの `type` を `url` にしている。
+    -   **解決策**: `type` には `url` ではなく、データの種類（`shapefile`, `geopackage` など）を指定します。
+        ```yaml
+        # 誤り
+        natural_earth:
+          type: url
+          url: https://.../ne_50m_land.zip
+        # 正解
+        natural_earth:
+          type: shapefile
+          url: https://.../ne_50m_land.zip
+        ```
+
+5.  **データソースがダウンロードされない (`... does not exist. Run with --download`)**
+    -   **問題**: スクリプト実行時にリモートのデータソース（Natural Earthなど）が見つからない。
+    -   **解決策**: `run_{THEME_NAME}.sh` 内の `generate-custom` コマンドに `--download` フラグを追加します。
+        ```bash
+        generate-custom \\
+            ...
+            --download \\
+            --force
+        ```
+
+---
+
 ## 新規テーマ追加ワークフロー
+
 
 新しいテーマ `{THEME_NAME}` を追加する手順は、以下の3ステップで構成されます。
 
