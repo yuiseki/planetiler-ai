@@ -14,6 +14,7 @@
         "nominatim",
         "onthegomap",
         "planetiler",
+        "shapefile",
         "sortedtable",
         "sparsearray",
         "tileserver"

@@ -1,0 +1,4 @@
+sources:
+  admin_points:
+    type: shapefile
+    url: https://shortbread.geofabrik.de/shapefiles/admin-points-4326.zip

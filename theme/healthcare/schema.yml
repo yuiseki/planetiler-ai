@@ -1,0 +1,252 @@
+schema_name: Healthcare Infrastructure
+schema_description: Global healthcare infrastructure including hospitals, clinics, pharmacies, emergency services (z0-14)
+attribution: <a href="https://www.openstreetmap.org/copyright" target="_blank">&copy; OpenStreetMap contributors</a>
+
+sources:
+  natural_earth:
+    type: geopackage
+    url: "https://naciscdn.org/naturalearth/packages/natural_earth_vector.gpkg.zip"
+    projection: EPSG:4326
+  osm:
+    type: osm
+    local_path: /data/planet-latest.osm.pbf
+
+layers:
+  - id: land
+    features:
+      - source: natural_earth
+        geometry: polygon
+        include_when:
+          '${ feature.source_layer }':
+            - ne_110m_land
+            - ne_50m_land
+            - ne_10m_land
+        min_zoom:
+          10:
+            '${ feature.source_layer }': [ ne_10m_land ]
+          5:
+            '${ feature.source_layer }': [ ne_50m_land ]
+          0:
+            '${ feature.source_layer }': [ ne_110m_land ]
+        max_zoom:
+          14:
+            '${ feature.source_layer }': [ ne_10m_land ]
+          9:
+            '${ feature.source_layer }': [ ne_50m_land ]
+          4:
+            '${ feature.source_layer }': [ ne_110m_land ]
+
+  - id: ocean
+    features:
+      - source: natural_earth
+        geometry: polygon
+        include_when:
+          '${ feature.source_layer }':
+            - ne_110m_ocean
+            - ne_50m_ocean
+            - ne_10m_ocean
+        min_zoom:
+          10:
+            '${ feature.source_layer }': [ ne_10m_ocean ]
+          5:
+            '${ feature.source_layer }': [ ne_50m_ocean ]
+          0:
+            '${ feature.source_layer }': [ ne_110m_ocean ]
+        max_zoom:
+          14:
+            '${ feature.source_layer }': [ ne_10m_ocean ]
+          9:
+            '${ feature.source_layer }': [ ne_50m_ocean ]
+          4:
+            '${ feature.source_layer }': [ ne_110m_ocean ]
+
+  - id: lakes
+    features:
+      - source: natural_earth
+        geometry: polygon
+        include_when:
+          '${ feature.source_layer }':
+            - ne_110m_lakes
+            - ne_50m_lakes
+            - ne_10m_lakes
+        min_zoom:
+          10:
+            '${ feature.source_layer }': [ ne_10m_lakes ]
+          5:
+            '${ feature.source_layer }': [ ne_50m_lakes ]
+          0:
+            '${ feature.source_layer }': [ ne_110m_lakes ]
+        max_zoom:
+          14:
+            '${ feature.source_layer }': [ ne_10m_lakes ]
+          9:
+            '${ feature.source_layer }': [ ne_50m_lakes ]
+          4:
+            '${ feature.source_layer }': [ ne_110m_lakes ]
+
+  - id: hospitals
+    features:
+      - source: osm
+        geometry: point
+        min_zoom: 8
+        include_when:
+          amenity: hospital
+        attributes:
+          - key: name
+            value: '${ feature.tags.name }'
+          - key: emergency
+            value: '${ feature.tags.emergency }'
+          - key: capacity
+            value: '${ feature.tags.capacity }'
+          - key: healthcare_speciality
+            value: '${ feature.tags.healthcare_speciality }'
+      - source: osm
+        geometry: point
+        min_zoom: 8
+        include_when:
+          healthcare: hospital
+        attributes:
+          - key: name
+            value: '${ feature.tags.name }'
+          - key: emergency
+            value: '${ feature.tags.emergency }'
+          - key: capacity
+            value: '${ feature.tags.capacity }'
+          - key: healthcare_speciality
+            value: '${ feature.tags.healthcare_speciality }'
+
+  - id: clinics
+    features:
+      - source: osm
+        geometry: point
+        min_zoom: 10
+        include_when:
+          amenity: clinic
+        attributes:
+          - key: name
+            value: '${ feature.tags.name }'
+          - key: healthcare_speciality
+            value: '${ feature.tags.healthcare_speciality }'
+      - source: osm
+        geometry: point
+        min_zoom: 10
+        include_when:
+          healthcare: clinic
+        attributes:
+          - key: name
+            value: '${ feature.tags.name }'
+          - key: healthcare_speciality
+            value: '${ feature.tags.healthcare_speciality }'
+
+  - id: doctors
+    features:
+      - source: osm
+        geometry: point
+        min_zoom: 12
+        include_when:
+          amenity: doctors
+        attributes:
+          - key: name
+            value: '${ feature.tags.name }'
+          - key: healthcare_speciality
+            value: '${ feature.tags.healthcare_speciality }'
+      - source: osm
+        geometry: point
+        min_zoom: 12
+        include_when:
+          healthcare: doctor
+        attributes:
+          - key: name
+            value: '${ feature.tags.name }'
+          - key: healthcare_speciality
+            value: '${ feature.tags.healthcare_speciality }'
+
+  - id: pharmacies
+    features:
+      - source: osm
+        geometry: point
+        min_zoom: 10
+        include_when:
+          amenity: pharmacy
+        attributes:
+          - key: name
+            value: '${ feature.tags.name }'
+          - key: opening_hours
+            value: '${ feature.tags.opening_hours }'
+          - key: dispensing
+            value: '${ feature.tags.dispensing }'
+
+  - id: dentists
+    features:
+      - source: osm
+        geometry: point
+        min_zoom: 12
+        include_when:
+          amenity: dentist
+        attributes:
+          - key: name
+            value: '${ feature.tags.name }'
+          - key: healthcare_speciality
+            value: '${ feature.tags.healthcare_speciality }'
+      - source: osm
+        geometry: point
+        min_zoom: 12
+        include_when:
+          healthcare: dentist
+        attributes:
+          - key: name
+            value: '${ feature.tags.name }'
+          - key: healthcare_speciality
+            value: '${ feature.tags.healthcare_speciality }'
+
+  - id: emergency_services
+    features:
+      - source: osm
+        geometry: point
+        min_zoom: 8
+        include_when:
+          amenity: fire_station
+        attributes:
+          - key: name
+            value: '${ feature.tags.name }'
+          - key: operator
+            value: '${ feature.tags.operator }'
+          - key: type
+            value: fire_station
+      - source: osm
+        geometry: point
+        min_zoom: 8
+        include_when:
+          amenity: police
+        attributes:
+          - key: name
+            value: '${ feature.tags.name }'
+          - key: operator
+            value: '${ feature.tags.operator }'
+          - key: type
+            value: police
+      - source: osm
+        geometry: point
+        min_zoom: 10
+        include_when:
+          emergency: __any__
+        attributes:
+          - key: name
+            value: '${ feature.tags.name }'
+          - key: operator
+            value: '${ feature.tags.operator }'
+          - key: type
+            value: '${ feature.tags.emergency }'
+
+  - id: health_posts
+    features:
+      - source: osm
+        geometry: point
+        min_zoom: 12
+        include_when:
+          amenity: health_post
+        attributes:
+          - key: name
+            value: '${ feature.tags.name }'
+          - key: operator
+            value: '${ feature.tags.operator }'

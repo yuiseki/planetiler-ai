@@ -1,0 +1,165 @@
+{
+  "version": 8,
+  "name": "Administrative Boundaries",
+  "glyphs": "fonts/{fontstack}/{range}.pbf",
+  "sources": {
+    "admins": {
+      "type": "vector",
+      "url": "mbtiles://{admins}"
+    }
+  },
+  "layers": [
+    {
+      "id": "background",
+      "type": "background",
+      "paint": {
+        "background-color": "#f8f4f0"
+      }
+    },
+    {
+      "id": "ocean",
+      "source": "admins",
+      "source-layer": "ocean",
+      "type": "fill",
+      "paint": {
+        "fill-color": "#d4e6f1"
+      }
+    },
+    {
+      "id": "boundaries_country",
+      "type": "line",
+      "source": "admins",
+      "source-layer": "boundaries",
+      "filter": ["==", "admin_level", 2],
+      "layout": {
+        "line-cap": "round",
+        "line-join": "round"
+      },
+      "paint": {
+        "line-color": "#a0a0a0",
+        "line-width": {
+          "base": 1,
+          "stops": [
+            [0, 0.5],
+            [4, 1],
+            [10, 2]
+          ]
+        }
+      }
+    },
+    {
+      "id": "boundaries_state",
+      "type": "line",
+      "source": "admins",
+      "source-layer": "boundaries",
+      "minzoom": 4,
+      "filter": ["==", "admin_level", 4],
+      "layout": {
+        "line-cap": "round",
+        "line-join": "round"
+      },
+      "paint": {
+        "line-color": "#c0c0c0",
+        "line-dasharray": [2, 2],
+        "line-width": {
+          "base": 1,
+          "stops": [
+            [4, 0.5],
+            [10, 1.5]
+          ]
+        }
+      }
+    },
+    {
+      "id": "boundary_labels_country_z0",
+      "type": "symbol",
+      "source": "admins",
+      "source-layer": "boundary_labels",
+      "minzoom": 0,
+      "maxzoom": 2,
+      "filter": [ "all",
+        ["==", "admin_level", 2]
+      ],
+      "layout": {
+        "text-field": ["get", "name"],
+        "text-font": ["Open Sans Bold"],
+        "text-size": 8,
+        "text-transform": "uppercase",
+        "text-optional": true
+      },
+      "paint": {
+        "text-color": "#606060",
+        "text-halo-color": "rgba(255,255,255,0.8)",
+        "text-halo-width": 1.5
+      }
+    },
+    {
+      "id": "boundary_labels_country_z2",
+      "type": "symbol",
+      "source": "admins",
+      "source-layer": "boundary_labels",
+      "minzoom": 2,
+      "maxzoom": 4,
+      "filter": [ "all",
+        ["==", "admin_level", 2],
+        [">=", "way_area", 70000000]
+      ],
+      "layout": {
+        "text-field": ["get", "name"],
+        "text-font": ["Open Sans Bold"],
+        "text-size": 10,
+        "text-transform": "uppercase",
+        "text-optional": true
+      },
+      "paint": {
+        "text-color": "#606060",
+        "text-halo-color": "rgba(255,255,255,0.8)",
+        "text-halo-width": 1.5
+      }
+    },
+    {
+      "id": "boundary_labels_country_z4",
+      "type": "symbol",
+      "source": "admins",
+      "source-layer": "boundary_labels",
+      "minzoom": 4,
+      "filter": ["==", "admin_level", 2],
+      "layout": {
+        "text-field": ["get", "name"],
+        "text-font": ["Open Sans Bold"],
+        "text-size": 12,
+        "text-transform": "uppercase",
+        "text-optional": true
+      },
+      "paint": {
+        "text-color": "#606060",
+        "text-halo-color": "rgba(255,255,255,0.8)",
+        "text-halo-width": 1.5
+      }
+    },
+    {
+      "id": "boundary_labels_state",
+      "type": "symbol",
+      "source": "admins",
+      "source-layer": "boundary_labels",
+      "minzoom": 4,
+      "filter": ["==", "admin_level", 4],
+      "layout": {
+        "text-field": ["get", "name"],
+        "text-font": ["Open Sans Regular"],
+        "text-size": {
+          "stops": [
+            [4, 8],
+            [8, 12]
+          ]
+        },
+        "text-optional": true
+      },
+      "paint": {
+        "text-color": "#808080",
+        "text-halo-color": "rgba(255,255,255,0.8)",
+        "text-halo-width": 1
+      }
+    }
+  ]
+}

@@ -1,0 +1,83 @@
+schema_name: Administrative Boundaries
+schema_description: "Administrative boundaries and labels from various sources."
+attribution: '<a href="https://www.openstreetmap.org/copyright" target="_blank">&copy; OpenStreetMap contributors</a>'
+
+sources:
+  # For ocean polygons
+  ocean:
+    type: shapefile
+    url: https://osmdata.openstreetmap.de/download/water-polygons-split-3857.zip
+  # For pre-processed administrative center points (labels)
+  admin_points:
+    type: shapefile
+    url: https://shortbread.geofabrik.de/shapefiles/admin-points-4326.zip
+  # For mid-to-high-zoom boundaries from OpenStreetMap
+  osm:
+    type: osm
+    local_path: /data/planet-latest.osm.pbf
+  # For low-zoom boundaries from Natural Earth
+  natural_earth:
+    type: geopackage
+    url: "https://naciscdn.org/naturalearth/packages/natural_earth_vector.gpkg.zip"
+    projection: EPSG:4326
+
+layers:
+  - id: ocean
+    features:
+      - source: ocean
+        geometry: polygon
+        min_zoom: 0
+        max_zoom: 14
+
+  - id: boundaries
+    features:
+      - source: natural_earth
+        geometry: line
+        min_zoom: 0
+        max_zoom: 4
+        include_when:
+          '${ feature.source_layer }':
+            - ne_110m_admin_0_boundary_lines_land
+            - ne_50m_admin_0_boundary_lines_land
+            - ne_10m_admin_0_boundary_lines_land
+        attributes:
+          - key: admin_level
+            value: 2
+      - source: osm
+        geometry: line
+        min_zoom: 5
+        include_when:
+          __all__:
+            - boundary: administrative
+            - admin_level: [ 2, 4 ]
+        attributes:
+          - key: admin_level
+            type: integer
+          - key: disputed
+            type: integer
+            value: 1
+            include_when:
+              disputed: "yes"
+            else: 0
+
+  - id: boundary_labels
+    features:
+      - source: admin_points
+        geometry: point
+        min_zoom: 0
+        attributes:
+          - key: way_area
+            tag_value: WAY_AREA
+            type: double
+          - key: admin_level
+            tag_value: ADMIN_LEVE
+            type: integer
+          - key: name
+            tag_value: NAME
+            type: string
+          - key: name_en
+            tag_value: NAME_EN
+            type: string
+          - key: name_de
+            tag_value: NAME_DE
+            type: string
