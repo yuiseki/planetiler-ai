@@ -1,0 +1,49 @@
+{
+  "version": 8,
+  "name": "Railways Minimal",
+  "sources": {
+    "railways": {
+      "type": "vector",
+      "url": "mbtiles://{railways}"
+    }
+  },
+  "layers": [
+    {
+      "id": "background",
+      "type": "background",
+      "paint": {
+        "background-color": "#f0f0f0"
+      }
+    },
+    {
+      "id": "railways_merged_line",
+      "type": "line",
+      "source": "railways",
+      "source-layer": "railways_merged",
+      "paint": {
+        "line-color": "#ff0000",
+        "line-width": 1
+      }
+    },
+    {
+      "id": "railways_unmerged_line",
+      "type": "line",
+      "source": "railways",
+      "source-layer": "railways_unmerged",
+      "paint": {
+        "line-color": "#0000ff",
+        "line-width": 1
+      }
+    },
+    {
+      "id": "railways_low_line",
+      "type": "line",
+      "source": "railways",
+      "source-layer": "railways_low",
+      "paint": {
+        "line-color": "#00ff00",
+        "line-width": 1
+      }
+    }
+  ]
+}

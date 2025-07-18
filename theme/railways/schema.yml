@@ -1,0 +1,44 @@
+schema_name: Railways
+schema_description: Railways (merged & un-merged lines, z0-14)
+attribution: <a href="https://www.openstreetmap.org/copyright" target="_blank">&copy; OpenStreetMap contributors</a>
+
+sources:
+  osm:
+    type: osm
+    local_path: /data/planet-latest.osm.pbf
+
+layers:
+  - id: railways_low
+    features:
+      - source: osm
+        geometry: line
+        min_zoom: 0
+        max_zoom: 3
+        include_when:
+          railway: __any__
+    tile_post_process:
+      merge_line_strings:
+        min_length: 0
+        tolerance: -1
+        buffer: -1
+
+  - id: railways_merged
+    features:
+      - source: osm
+        geometry: line
+        min_zoom: 4
+        include_when:
+          railway: __any__
+    tile_post_process:
+      merge_line_strings:
+        min_length: 0
+        tolerance: -1
+        buffer: -1
+
+  - id: railways_unmerged
+    features:
+      - source: osm
+        geometry: line
+        min_zoom: 4
+        include_when:
+          railway: __any__
