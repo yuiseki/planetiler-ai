@@ -2,6 +2,22 @@
 
 A Proof-of-Concept for an AI agent that generates planet-scale custom map vector tiles.
 
+---
+
+## Example maps created by AI
+
+### World Rivers Map
+[https://tile.yuiseki.net/styles/rivers/#1/0/0](https://tile.yuiseki.net/styles/rivers/#1/0/0)
+
+[![Image from Gyazo](https://i.gyazo.com/94e93ff6e5e60fa48cf649c635d89833.png)](https://tile.yuiseki.net/styles/rivers/#1/0/0)
+
+### World Railways Map
+[https://tile.yuiseki.net/styles/railways/#1/0/0](https://tile.yuiseki.net/styles/railways/#1/0/0)
+
+[![Image from Gyazo](https://i.gyazo.com/6edfbe4ff7eff9a8bcaa4e439450a6a5.png)](https://tile.yuiseki.net/styles/railways/#1/0/0)
+
+---
+
 ## Background
 
 In December 2023, I developed an AI agent called `charites-ai`.

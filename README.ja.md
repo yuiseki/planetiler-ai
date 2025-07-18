@@ -2,6 +2,23 @@
 
 惑星規模のカスタムな地図ベクトルタイルを生成するAIエージェントのプルーフ・オブ・コンセプト
 
+---
+
+## AIが作成した地図の例
+
+### 世界中の川だけの地図
+[https://tile.yuiseki.net/styles/rivers/#1/0/0](https://tile.yuiseki.net/styles/rivers/#1/0/0)
+
+[![Image from Gyazo](https://i.gyazo.com/94e93ff6e5e60fa48cf649c635d89833.png)](https://tile.yuiseki.net/styles/rivers/#1/0/0)
+
+### 世界中の鉄道だけの地図
+[https://tile.yuiseki.net/styles/railways/#1/0/0](https://tile.yuiseki.net/styles/railways/#1/0/0)
+
+[![Image from Gyazo](https://i.gyazo.com/6edfbe4ff7eff9a8bcaa4e439450a6a5.png)](https://tile.yuiseki.net/styles/railways/#1/0/0)
+
+---
+
+
 ## 背景
 
 2023年の12月に、私は `charites-ai` というAIエージェントを開発しました。
@@ -86,4 +103,5 @@ AIエージェントは、このフレームワークの規約に従って新し
 ├── run_*.sh               # 各テーマのタイルを生成するための実行スクリプト
 └── docker-compose.yml     # タイルサーバーを起動するための設定ファイル
 ```
+
 
