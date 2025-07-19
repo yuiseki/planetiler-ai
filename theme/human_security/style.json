@@ -35,7 +35,7 @@
       "paint": {
         "fill-color": [
           "step",
-          ["get", "overall_risk_cat"],
+          ["get", "water_risk"],
           "rgba(0,0,0,0)",
           0, "#ffffd4",
           1, "#fed98e",

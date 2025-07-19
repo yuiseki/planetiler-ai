@@ -91,58 +91,58 @@ layers:
             value: '${ feature.tags.NAME }'
 
   # --- Healthcare Layer from OSM ---
-  # This single layer consolidates all healthcare-related features for efficiency and clear styling.
   - id: healthcare
     features:
       # Points for various facilities
       - source: osm
         geometry: point
-        # Include all relevant amenities and healthcare tags
         include_when:
           or:
             - amenity: [ hospital, clinic, doctors, dentist, pharmacy, health_post ]
-            - healthcare: [ hospital, clinic, doctor, dentist, pharmacy, health_post ]
-        min_zoom: 6 # Start showing major facilities at a global level
+            - healthcare: __any__
+        min_zoom: 6
         attributes:
-          # --- Core Attributes ---
           - key: name
             value: '${ feature.tags.name }'
           - key: operator
             value: '${ feature.tags.operator }'
-          # --- Standardized Class ---
           - key: class
+            type: string
             value:
-              coalesce:
-                - case:
-                    when: "feature.tags['amenity'] == 'hospital' || feature.tags['healthcare'] == 'hospital'"
-                    then: hospital
-                - case:
-                    when: "feature.tags['amenity'] in ['clinic', 'doctors', 'health_post'] || feature.tags['healthcare'] in ['clinic', 'doctor', 'health_post']"
-                    then: clinic
-                - case:
-                    when: "feature.tags['amenity'] == 'pharmacy' || feature.tags['healthcare'] == 'pharmacy'"
-                    then: pharmacy
-                - case:
-                    when: "feature.tags['amenity'] == 'dentist' || feature.tags['healthcare'] == 'dentist'"
-                    then: dentist
-          # --- Key Indicators ---
+              match:
+                - value: hospital
+                  if: { amenity: hospital }
+                - value: hospital
+                  if: { healthcare: hospital }
+                - value: clinic
+                  if: { amenity: [ clinic, doctors, health_post ] }
+                - value: clinic
+                  if: { healthcare: [ clinic, doctor, health_post ] }
+                - value: pharmacy
+                  if: { amenity: pharmacy }
+                - value: pharmacy
+                  if: { healthcare: pharmacy }
+                - value: dentist
+                  if: { amenity: dentist }
+                - value: dentist
+                  if: { healthcare: dentist }
+                - else: unknown
           - key: emergency
+            type: boolean
             value:
-              case:
-                when: "feature.tags['emergency'] == 'yes'"
-                then: true
-                else: false
+              match:
+                - value: true
+                  if: { emergency: yes }
+                - else: false
           - key: beds
-            value: "${ feature.tags['capacity:beds'] }"
+            value: '${ feature.tags["capacity:beds"] }'
           - key: speciality
-            value: "${ feature.tags['healthcare:speciality'] }"
+            value: '${ feature.tags["healthcare:speciality"] }'
       # Polygons for hospital areas
       - source: osm
         geometry: polygon
         include_when:
-          or:
-            - amenity: hospital
-            - healthcare: hospital
+          amenity: hospital
         min_zoom: 10
         attributes:
           - key: name
@@ -150,12 +150,13 @@ layers:
           - key: class
             value: hospital
           - key: emergency
+            type: boolean
             value:
-              case:
-                when: "feature.tags['emergency'] == 'yes'"
-                then: true
-                else: false
+              match:
+                - value: true
+                  if: { emergency: yes }
+                - else: false
           - key: beds
-            value: "${ feature.tags['capacity:beds'] }"
+            value: '${ feature.tags["capacity:beds"] }'
           - key: speciality
-            value: "${ feature.tags['healthcare:speciality'] }"
+            value: '${ feature.tags["healthcare:speciality"] }'

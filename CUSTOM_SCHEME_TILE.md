@@ -15,7 +15,7 @@
     -   OSMだけでは表現できない地球規模の現象を捉えるため、世界全体をカバーするオープンなデータソースを常に探し、積極的に活用してください。Natural Earthのような確立されたものだけでなく、各分野の専門機関が公開するデータセット（例: 気象、海洋、エネルギー、経済など）を組み合わせることで、地図に多層的で専門的な深みを与えることができます。
 
 3.  **Zoom 0での視覚的インパクトを最大化する**
-    -   作成する地図は、Zoom 0、つまり地球全体を俯瞰したときに、そのテーマが持つ最も重要なメッセージが一目で伝わるような、強力な視覚的インパクトを持つべきです。低ズームレベルでは大胆な単純化と象徴的な表現を用い、ズームインするにつれて詳細な情報が現れるようにスキーマとスタイルを設計してください。地球規模の課題や洞察を、直感的かつ美しく伝えることが重要です。
+    -   作成する地図は、Zoom 0、つまり地球全体を俯瞰したときに、そのテーマが持つ最も重要なメッセージが一目で伝わるような、強力な視覚的インパクトを持つべきです。低ズームレベルでは大胆な単純化と象徴的表現を用い、ズームインするにつれて詳細な情報が現れるようにスキーマとスタイルを設計してください。地球規模の課題や洞察を、直感的かつ美しく伝えることが重要です。
 
 ---
 
@@ -92,13 +92,15 @@ Planetilerのスキーマ定義は非常に柔軟ですが、その分、特定�
         ```
 
 5.  **データソースがダウンロードされない (`... does not exist. Run with --download`)**
-    -   **問題**: スクリプト実行時にリモートのデータソース（Natural Earthなど）が見つからない。
-    -   **解決策**: `run_{THEME_NAME}.sh` 内の `generate-custom` コマンドに `--download` フラグを追加します。
-        ```bash
-        generate-custom \\
-            ...
-            --download \\
-            --force
+    -   **問題**: `make`実行時にリモートのデータソース（Natural Earthなど）が見つからない。
+    -   **解決策**: `Makefile` 内の対応するターゲットの `generate-custom` コマンドに `--download` フラグが設定されていることを確認します。ほとんどのテーマ生成コマンドにはデフォルトで含まれています。
+        ```makefile
+        # Makefile内での記述例
+        themename:
+        	... generate-custom \
+        		...
+        		--download \
+        		--force
         ```
 
 ---
@@ -114,7 +116,7 @@ Planetilerは、OpenStreetMapデータに加えて、様々な形式のベクト
 -   **`geopackage`**: OGC GeoPackage形式 (`.gpkg`)。Shapefileに代わる、よりモダンな単一ファイルのフォーマットです。
 -   **`geojson`**: GeoJSON形式 (`.geojson` または `.json`)。Webで標準的に利用される軽量なフォーマットです。
 
-これらのソースは、ローカルパス (`local_path`) またはURL (`url`) で指定できます。URLを指定した場合は、実行スクリプトで `--download` フラグを使用することを忘れないでください。
+これらのソースは、ローカルパス (`local_path`) またはURL (`url`) で指定できます。URLを指定した場合は、`Makefile`のターゲットで `--download` フラグが使用されていることを確認してください。
 
 ---
 
@@ -149,37 +151,34 @@ Planetilerは、OpenStreetMapデータに加えて、様々な形式のベクト
 
 ### ステップ2: ベクトルタイルの生成
 
-定義したスキーマに基づいて `.mbtiles` ファイルを生成します。
+定義したスキーマに基づいて `.mbtiles` ファイルを生成します。このプロジェクトでは `Makefile` を使用して、テーマごとのタイル生成プロセスを管理します。
 
-1.  **実行スクリプト (`run_{THEME_NAME}.sh`) の作成**
-    -   `run_{THEME_NAME}.sh` をプロジェクトルートに作成します。
-    -   **目的**: PlanetilerのDockerコンテナを実行し、タイルを生成します。
-    -   **スクリプト内容**:
-        ```bash
-        #!/bin/bash
-        docker run \
-            -u `id -u`:`id -g` \
-            --memory 20g --memory-swap -1 \
-            -e JAVA_TOOL_OPTIONS="-Xms8g -Xmx8g" \
-            -v "$(pwd)/data":/data \
-            ghcr.io/onthegomap/planetiler:latest \
-                generate-custom \
-                --schema=/data/{THEME_NAME}.yml \
-                --output=/data/{THEME_NAME}.mbtiles \
-                --force
+1.  **Makefileへのターゲット追加（必要な場合）**
+    -   新しいテーマ `{THEME_NAME}` のためのターゲットを `Makefile` に追加します。
+    -   **目的**: `make {THEME_NAME}` コマンドでタイル生成を実行できるようにします。
+    -   多くのテーマは共通のパターンに従っているため、`generate_theme` マクロを使用して簡単に追加できます。
+        ```makefile
+        # Makefileの末尾に共通パターンでテーマを追加する
+        $(eval $(call generate_theme,{THEME_NAME}))
+        ```
+    -   もしテーマが特別なパラメータ（異なるメモリ設定など）を必要とする場合は、既存のカスタムターゲット（例: `healthcare`, `monaco`）を参考に、新しいターゲットを定義してください。
+        ```makefile
+        # Makefileにカスタムターゲットを追加する例
+        {THEME_NAME}:
+        	@echo "Generating theme: {THEME_NAME}..."
+        	@cp "theme/{THEME_NAME}/schema.yml" "data/{THEME_NAME}.yml"
+        	$(DOCKER_RUN) generate-custom \
+        		--schema=/data/{THEME_NAME}.yml \
+        		--output=/data/{THEME_NAME}.mbtiles \
+        		--download \
+        		--force
         ```
 
 2.  **生成プロセスの実行**
-    以下のコマンドを順番に実行します。
+    -   以下のコマンドを実行するだけで、タイル生成が実行されます。`Makefile`のレシピがスキーマのコピーも自動的に行います。
     ```bash
-    # 1. スキーマファイルをdataディレクトリにコピー
-    cp theme/{THEME_NAME}/schema.yml data/{THEME_NAME}.yml
-
-    # 2. 実行権限を付与
-    chmod +x run_{THEME_NAME}.sh
-
-    # 3. タイル生成を実行（時間がかかります）
-    ./run_{THEME_NAME}.sh
+    # タイル生成を実行（時間がかかります）
+    make {THEME_NAME}
     ```
 
 ### ステップ3: タイルサーバーの設定

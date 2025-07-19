@@ -21,6 +21,6 @@ layers:
         geometry: polygon
         min_zoom: 0
         attributes:
-          - key: overall_risk_cat # Overall Water Risk Category
-            value: '${ feature.tags.w_awr_def_tot_cat }'
+          - key: water_risk
+            value: '${ feature.tags.water_risk }'
             type: integer
