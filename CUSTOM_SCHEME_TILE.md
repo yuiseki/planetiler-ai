@@ -103,6 +103,21 @@ Planetilerのスキーマ定義は非常に柔軟ですが、その分、特定�
 
 ---
 
+## 利用可能なデータソース形式
+
+Planetilerは、OpenStreetMapデータに加えて、様々な形式のベクトルデータソースを統合して利用することができます。新しいテーマを設計する際は、これらのデータソースを創造的に組み合わせることを検討してください。
+
+`schema.yml` の `sources` セクションで定義する際に指定する `type` は以下の通りです。
+
+-   **`osm`**: OpenStreetMapのPBF形式 (`.osm.pbf`)。プロジェクトの主要データソースです。
+-   **`shapefile`**: Esri Shapefile形式 (`.shp` を含むzipファイル)。地理空間データで広く使われています。
+-   **`geopackage`**: OGC GeoPackage形式 (`.gpkg`)。Shapefileに代わる、よりモダンな単一ファイルのフォーマットです。
+-   **`geojson`**: GeoJSON形式 (`.geojson` または `.json`)。Webで標準的に利用される軽量なフォーマットです。
+
+これらのソースは、ローカルパス (`local_path`) またはURL (`url`) で指定できます。URLを指定した場合は、実行スクリプトで `--download` フラグを使用することを忘れないでください。
+
+---
+
 ## 新規テーマ追加ワークフロー
 
 
