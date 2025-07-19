@@ -1,0 +1,130 @@
+{
+  "version": 8,
+  "name": "Energy Transition",
+  "metadata": {
+    "maptiler:license": "https://www.maptiler.com/license/",
+    "maptiler:copyright": "Copyright 2024 Yuiseki Inc."
+  },
+  "sources": {
+    "energy_transition": {
+      "type": "vector",
+      "url": "mbtiles://{energy_transition}"
+    }
+  },
+  "glyphs": "https://fonts.tilehosting.com/{fontstack}/{range}.pbf",
+  "layers": [
+    {
+      "id": "background",
+      "type": "background",
+      "paint": {
+        "background-color": "#0b0c10"
+      }
+    },
+    {
+      "id": "ocean",
+      "type": "fill",
+      "source": "energy_transition",
+      "source-layer": "ocean",
+      "paint": {
+        "fill-color": "#131826"
+      }
+    },
+    {
+      "id": "land",
+      "type": "fill",
+      "source": "energy_transition",
+      "source-layer": "land",
+      "paint": {
+        "fill-color": "#20283d"
+      }
+    },
+    {
+      "id": "offshore_wind_potential",
+      "type": "fill",
+      "source": "energy_transition",
+      "source-layer": "offshore_wind_potential",
+      "paint": {
+        "fill-color": "#00ffff",
+        "fill-opacity": 0.1
+      }
+    },
+    {
+      "id": "solar_potential",
+      "type": "fill",
+      "source": "energy_transition",
+      "source-layer": "solar_potential",
+      "paint": {
+        "fill-color": "#ffff00",
+        "fill-opacity": 0.15
+      }
+    },
+    {
+      "id": "extraction_sites_poly",
+      "type": "fill",
+      "source": "energy_transition",
+      "source-layer": "extraction_sites",
+      "filter": ["==", "$type", "Polygon"],
+      "paint": {
+        "fill-color": "#ff4500",
+        "fill-opacity": 0.4
+      }
+    },
+    {
+      "id": "extraction_sites_point",
+      "type": "circle",
+      "source": "energy_transition",
+      "source-layer": "extraction_sites",
+      "filter": ["==", "$type", "Point"],
+      "paint": {
+        "circle-radius": 2,
+        "circle-color": "#ff4500",
+        "circle-opacity": 0.6
+      }
+    },
+    {
+      "id": "fossil_fuel_plant",
+      "type": "circle",
+      "source": "energy_transition",
+      "source-layer": "fossil_fuel_plant",
+      "paint": {
+        "circle-radius": 3,
+        "circle-color": "#ff8c00",
+        "circle-stroke-color": "#ff4500",
+        "circle-stroke-width": 1
+      }
+    },
+    {
+      "id": "renewable_plant_wind",
+      "type": "circle",
+      "source": "energy_transition",
+      "source-layer": "renewable_plant",
+      "filter": ["==", "source", "wind"],
+      "paint": {
+        "circle-radius": 3,
+        "circle-color": "#00ffff"
+      }
+    },
+    {
+      "id": "renewable_plant_solar",
+      "type": "circle",
+      "source": "energy_transition",
+      "source-layer": "renewable_plant",
+      "filter": ["==", "source", "solar"],
+      "paint": {
+        "circle-radius": 3,
+        "circle-color": "#ffff00"
+      }
+    },
+    {
+      "id": "renewable_plant_hydro",
+      "type": "circle",
+      "source": "energy_transition",
+      "source-layer": "renewable_plant",
+      "filter": ["==", "source", "hydro"],
+      "paint": {
+        "circle-radius": 3,
+        "circle-color": "#4169e1"
+      }
+    }
+  ]
+}

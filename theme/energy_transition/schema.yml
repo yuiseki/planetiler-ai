@@ -1,0 +1,118 @@
+# Defines the layers for the Energy Transition Map.
+# This theme visualizes the past, present, and future of global energy infrastructure
+# to provide insights into the ongoing transition to renewable energy.
+
+schema_name: "Energy Transition"
+schema_description: "A map visualizing fossil fuel infrastructure, current renewable energy sources, and high-potential areas for future solar and wind development."
+attribution: "<a href=\"https://www.openstreetmap.org/copyright\" target=\"_blank\">&copy; OpenStreetMap contributors</a>"
+
+sources:
+  osm:
+    type: osm
+    local_path: /data/planet-latest.osm.pbf
+
+  natural_earth:
+    type: geopackage
+    url: "https://naciscdn.org/naturalearth/packages/natural_earth_vector.gpkg.zip"
+    projection: EPSG:4326
+
+layers:
+  # Background layers for context
+  - id: "land"
+    features:
+      - source: natural_earth
+        geometry: polygon
+        include_when:
+          '${ feature.source_layer }': [ ne_110m_land, ne_50m_land, ne_10m_land ]
+        min_zoom:
+          10: { '${ feature.source_layer }': [ ne_10m_land ] }
+          5: { '${ feature.source_layer }': [ ne_50m_land ] }
+          0: { '${ feature.source_layer }': [ ne_110m_land ] }
+        max_zoom:
+          14: { '${ feature.source_layer }': [ ne_10m_land ] }
+          9: { '${ feature.source_layer }': [ ne_50m_land ] }
+          4: { '${ feature.source_layer }': [ ne_110m_land ] }
+
+  - id: "ocean"
+    features:
+      - source: natural_earth
+        geometry: polygon
+        include_when:
+          '${ feature.source_layer }': [ ne_110m_ocean, ne_50m_ocean, ne_10m_ocean ]
+        min_zoom:
+          10: { '${ feature.source_layer }': [ ne_10m_ocean ] }
+          5: { '${ feature.source_layer }': [ ne_50m_ocean ] }
+          0: { '${ feature.source_layer }': [ ne_110m_ocean ] }
+        max_zoom:
+          14: { '${ feature.source_layer }': [ ne_10m_ocean ] }
+          9: { '${ feature.source_layer }': [ ne_50m_ocean ] }
+          4: { '${ feature.source_layer }': [ ne_110m_ocean ] }
+
+  # --- Potential Future Energy ---
+  - id: "solar_potential"
+    features:
+      - source: osm
+        geometry: polygon
+        min_zoom: 4
+        include_when:
+          natural: [ sand, desert ]
+
+  - id: "offshore_wind_potential"
+    features:
+      - source: natural_earth
+        geometry: polygon
+        min_zoom: 4
+        include_when:
+          '${ feature.source_layer }': [ ne_10m_bathymetry_K_200 ]
+
+  # --- Legacy Fossil Fuel Infrastructure ---
+  - id: "fossil_fuel_plant"
+    features:
+      - source: osm
+        geometry: point
+        min_zoom: 6
+        include_when:
+          power: plant
+          plant:source: [ coal, gas, oil, diesel ]
+        attributes:
+          - key: name
+            value: '${ feature.tags.name }'
+          - key: source
+            value: '${ feature.tags["plant:source"] }'
+
+  - id: "extraction_sites"
+    features:
+      - source: osm
+        geometry: point
+        min_zoom: 8
+        include_when:
+          man_made: petroleum_well
+        attributes:
+          - key: type
+            value: 'oil_well'
+      - source: osm
+        geometry: polygon
+        min_zoom: 8
+        include_when:
+          landuse: quarry
+          resource: coal
+        attributes:
+          - key: type
+            value: 'coal_mine'
+          - key: name
+            value: '${ feature.tags.name }'
+
+  # --- Current Renewable Energy Infrastructure ---
+  - id: "renewable_plant"
+    features:
+      - source: osm
+        geometry: point
+        min_zoom: 6
+        include_when:
+          power: plant
+          plant:source: [ solar, wind, hydro ]
+        attributes:
+          - key: name
+            value: '${ feature.tags.name }'
+          - key: source
+            value: '${ feature.tags["plant:source"] }'
