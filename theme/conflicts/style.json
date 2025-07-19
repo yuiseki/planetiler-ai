@@ -1,0 +1,79 @@
+{
+  "version": 8,
+  "name": "UCDP Conflicts",
+  "sources": {
+    "conflicts": {
+      "type": "vector",
+      "url": "mbtiles://{conflicts}"
+    }
+  },
+  "layers": [
+    {
+      "id": "background",
+      "type": "background",
+      "paint": {
+        "background-color": "#f8f4f0"
+      }
+    },
+    {
+      "id": "ocean",
+      "type": "fill",
+      "source": "conflicts",
+      "source-layer": "ocean",
+      "paint": {
+        "fill-color": "#d4e9f7"
+      }
+    },
+    {
+      "id": "land",
+      "type": "fill",
+      "source": "conflicts",
+      "source-layer": "land",
+      "paint": {
+        "fill-color": "#f8f4f0"
+      }
+    },
+    {
+      "id": "lakes",
+      "type": "fill",
+      "source": "conflicts",
+      "source-layer": "lakes",
+      "paint": {
+        "fill-color": "#d4e9f7"
+      }
+    },
+    {
+      "id": "conflicts",
+      "type": "circle",
+      "source": "conflicts",
+      "source-layer": "conflicts",
+      "paint": {
+        "circle-radius": [
+          "step",
+          ["get", "best"],
+          2,
+          10,
+          4,
+          100,
+          8,
+          1000,
+          15
+        ],
+        "circle-color": [
+          "step",
+          ["get", "best"],
+          "#ffcc00",
+          10,
+          "#ff9900",
+          100,
+          "#ff3300",
+          1000,
+          "#cc0000"
+        ],
+        "circle-opacity": 0.7,
+        "circle-stroke-color": "#ffffff",
+        "circle-stroke-width": 0.5
+      }
+    }
+  ]
+}

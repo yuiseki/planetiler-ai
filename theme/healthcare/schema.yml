@@ -114,23 +114,22 @@ layers:
             value:
               coalesce:
                 - case:
-                    when: "'${ feature.tags.amenity }' == 'hospital' || '${ feature.tags.healthcare }' == 'hospital'"
+                    when: "feature.tags['amenity'] == 'hospital' || feature.tags['healthcare'] == 'hospital'"
                     then: hospital
                 - case:
-                    when: "'${ feature.tags.amenity }' in ['clinic', 'doctors', 'health_post'] || '${ feature.tags.healthcare }' in ['clinic', 'doctor', 'health_post']"
+                    when: "feature.tags['amenity'] in ['clinic', 'doctors', 'health_post'] || feature.tags['healthcare'] in ['clinic', 'doctor', 'health_post']"
                     then: clinic
                 - case:
-                    when: "'${ feature.tags.amenity }' == 'pharmacy' || '${ feature.tags.healthcare }' == 'pharmacy'"
+                    when: "feature.tags['amenity'] == 'pharmacy' || feature.tags['healthcare'] == 'pharmacy'"
                     then: pharmacy
                 - case:
-                    when: "'${ feature.tags.amenity }' == 'dentist' || '${ feature.tags.healthcare }' == 'dentist'"
+                    when: "feature.tags['amenity'] == 'dentist' || feature.tags['healthcare'] == 'dentist'"
                     then: dentist
           # --- Key Indicators ---
           - key: emergency
             value:
               case:
-                when:
-                  "'${ feature.tags.emergency }'": yes
+                when: "feature.tags['emergency'] == 'yes'"
                 then: true
                 else: false
           - key: beds
@@ -153,8 +152,7 @@ layers:
           - key: emergency
             value:
               case:
-                when:
-                  "'${ feature.tags.emergency }'": yes
+                when: "feature.tags['emergency'] == 'yes'"
                 then: true
                 else: false
           - key: beds
