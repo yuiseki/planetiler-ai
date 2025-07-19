@@ -1,0 +1,96 @@
+{
+  "version": 8,
+  "name": "Global Human Security",
+  "metadata": {},
+  "sources": {
+    "human_security": {
+      "type": "vector",
+      "url": "mbtiles://{human_security}"
+    }
+  },
+  "glyphs": "https://fonts.tilehosting.com/{fontstack}/{range}.pbf",
+  "layers": [
+    {
+      "id": "background",
+      "type": "background",
+      "paint": {
+        "background-color": "#050a14"
+      }
+    },
+    {
+      "id": "ocean",
+      "type": "fill",
+      "source": "human_security",
+      "source-layer": "ocean",
+      "paint": {
+        "fill-color": "#131826"
+      }
+    },
+    {
+      "id": "water_stress_areas",
+      "type": "fill",
+      "source": "human_security",
+      "source-layer": "water_stress_areas",
+      "minzoom": 0,
+      "paint": {
+        "fill-color": [
+          "step",
+          ["get", "overall_risk_cat"],
+          "rgba(0,0,0,0)",
+          0, "#ffffd4",
+          1, "#fed98e",
+          2, "#fe9929",
+          3, "#d95f0e",
+          4, "#993404"
+        ],
+        "fill-opacity": 0.7
+      }
+    },
+    {
+      "id": "land_boundaries",
+      "type": "line",
+      "source": "human_security",
+      "source-layer": "land_boundaries",
+      "minzoom": 0,
+      "paint": {
+        "line-color": "#4a5a8a",
+        "line-width": 0.5,
+        "line-opacity": 0.3
+      }
+    },
+    {
+      "id": "pko_missions",
+      "type": "circle",
+      "source": "human_security",
+      "source-layer": "pko_missions",
+      "minzoom": 5,
+      "paint": {
+        "circle-radius": [
+          "interpolate",
+          ["linear"],
+          ["get", "personnel"],
+          1, 4,
+          1000, 8,
+          10000, 16,
+          20000, 24
+        ],
+        "circle-color": "#007bff",
+        "circle-opacity": 0.5,
+        "circle-stroke-color": "#ffffff",
+        "circle-stroke-width": 1
+      }
+    },
+    {
+      "id": "wash_facilities",
+      "type": "circle",
+      "source": "human_security",
+      "source-layer": "wash_facilities",
+      "minzoom": 10,
+      "paint": {
+        "circle-radius": 2,
+        "circle-color": "#00ffff",
+        "circle-opacity": 0.8
+      }
+    }
+  ]
+}

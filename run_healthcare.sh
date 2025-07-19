@@ -8,4 +8,5 @@ docker run \
         generate-custom \
         --schema=/data/healthcare.yml \
         --output=/data/healthcare.mbtiles \
+        --download \
         --force
