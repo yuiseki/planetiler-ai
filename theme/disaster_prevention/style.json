@@ -8,7 +8,7 @@
   "sources": {
     "disaster_prevention": {
       "type": "vector",
-      "url": "mbtiles://{disaster_prevention}"
+      "url": "mbtiles://disaster_prevention"
     }
   },
   "glyphs": "https://fonts.tilehosting.com/{fontstack}/{range}.pbf",

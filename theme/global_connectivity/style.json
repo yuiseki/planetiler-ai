@@ -71,6 +71,48 @@
       }
     },
     {
+      "id": "major_ports_low_zoom",
+      "type": "circle",
+      "source": "global_connectivity",
+      "source-layer": "major_ports",
+      "minzoom": 0,
+      "maxzoom": 5,
+      "paint": {
+        "circle-color": "#3399ff",
+        "circle-radius": [
+          "interpolate",
+          ["linear"],
+          ["zoom"],
+          0,
+          1.5,
+          4,
+          3
+        ],
+        "circle-opacity": 0.8
+      }
+    },
+    {
+      "id": "major_airports_low_zoom",
+      "type": "circle",
+      "source": "global_connectivity",
+      "source-layer": "major_airports",
+      "minzoom": 0,
+      "maxzoom": 5,
+      "paint": {
+        "circle-color": "#ffcc00",
+        "circle-radius": [
+          "interpolate",
+          ["linear"],
+          ["zoom"],
+          0,
+          1.5,
+          4,
+          3
+        ],
+        "circle-opacity": 0.8
+      }
+    },
+    {
       "id": "major_ports",
       "type": "symbol",
       "source": "global_connectivity",

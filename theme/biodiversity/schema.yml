@@ -17,8 +17,11 @@ sources:
     type: shapefile
     url: "https://naciscdn.org/naturalearth/10m/physical/ne_10m_ocean.zip"
   # Data from Protected Planet (https://www.protectedplanet.net/en)
+  # The source is a File Geodatabase (.gdb) inside a zip.
+  # We specify 'geopackage' as the type, as it's a container-based format
+  # that hints at Planetiler/GDAL to inspect the contents.
   wdpa:
-    type: shapefile
+    type: geopackage
     url: "https://d1gam3xoknrgr2.cloudfront.net/current/WDPA_WDOECM_Jul2025_Public_all.zip"
   # IMPORTANT: User needs to download GFW data manually into /data/gfw/
   # This is a placeholder path for annual tree cover loss data.
@@ -41,10 +44,45 @@ layers:
         geometry: polygon
         include_when:
           '${ feature.source_layer }': ne_10m_land
+  - id: coastline
+    features:
+      - source: osm
+        min_zoom: 0
+        geometry: linestring
+        include_when:
+          natural: coastline
+  - id: glaciers
+    features:
+      - source: osm
+        min_zoom: 0
+        geometry: polygon
+        include_when:
+          natural: glacier
+  - id: scrub
+    features:
+      - source: osm
+        min_zoom: 0
+        geometry: polygon
+        include_when:
+          natural: scrub
+  - id: heath
+    features:
+      - source: osm
+        min_zoom: 0
+        geometry: polygon
+        include_when:
+          natural: heath
+  - id: grasslands
+    features:
+      - source: osm
+        min_zoom: 0
+        geometry: polygon
+        include_when:
+          natural: grassland
   - id: forests
     features:
       - source: osm
-        min_zoom: 4
+        min_zoom: 0
         geometry: polygon
         include_when:
           or:
@@ -56,7 +94,7 @@ layers:
   - id: wetlands
     features:
       - source: osm
-        min_zoom: 6
+        min_zoom: 0
         geometry: polygon
         include_when:
           natural: wetland
@@ -68,10 +106,8 @@ layers:
       - source: wdpa
         min_zoom: 0
         geometry: polygon
-        # Assuming the shapefile layer name is one of these, may need adjustment
         include_when:
-          '${ feature.source_layer }':
-            - WDPA_poly_Public
+          '${ feature.source_layer }': WDPA_WDOECM_poly_Jul2025_all
         attributes:
           - key: name
             value: '${ feature.tags.NAME }'

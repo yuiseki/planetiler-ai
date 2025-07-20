@@ -54,6 +54,52 @@
       }
     },
     {
+      "id": "glaciers",
+      "type": "fill",
+      "source": "biodiversity",
+      "source-layer": "glaciers",
+      "paint": {
+        "fill-color": "#ffffff"
+      }
+    },
+    {
+      "id": "scrub",
+      "type": "fill",
+      "source": "biodiversity",
+      "source-layer": "scrub",
+      "paint": {
+        "fill-color": "#c8d7ab"
+      }
+    },
+    {
+      "id": "heath",
+      "type": "fill",
+      "source": "biodiversity",
+      "source-layer": "heath",
+      "paint": {
+        "fill-color": "#d8c6d8"
+      }
+    },
+    {
+      "id": "grasslands",
+      "type": "fill",
+      "source": "biodiversity",
+      "source-layer": "grasslands",
+      "paint": {
+        "fill-color": "#c3e1b5"
+      }
+    },
+    {
+      "id": "coastline",
+      "type": "line",
+      "source": "biodiversity",
+      "source-layer": "coastline",
+      "paint": {
+        "line-color": "#7ebbd9",
+        "line-width": 0.5
+      }
+    },
+    {
       "id": "forests",
       "type": "fill",
       "source": "biodiversity",

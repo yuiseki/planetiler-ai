@@ -55,7 +55,7 @@ An AI agent can follow the conventions of this framework to add new themes (sche
 
 ## Usage
 
-This project is primarily intended for use by an AI agent, but it can also be run manually by humans. `CUSTOM_SCHEME_TILE.md` describes the detailed procedure for an AI agent to add a new theme.
+This project is primarily intended for use by an AI agent, but it can also be run manually by humans. `CUSTOM_TILE.md` describes the detailed procedure for an AI agent to add a new theme.
 
 ### Example of generating tiles with an existing theme (Rivers)
 

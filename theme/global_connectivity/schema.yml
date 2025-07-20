@@ -88,9 +88,9 @@ layers:
     features:
       - source: osm
         geometry: point
-        min_zoom: 4
+        min_zoom: 0
         include_when:
-          harbour: port
+          industrial: port
         attributes:
           - key: name
             value: '${ feature.tags.name }'
@@ -99,7 +99,7 @@ layers:
     features:
       - source: osm
         geometry: point
-        min_zoom: 4
+        min_zoom: 0
         include_when:
           aeroway: aerodrome
           aerodrome: international

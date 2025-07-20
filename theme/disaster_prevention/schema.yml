@@ -10,28 +10,34 @@ sources:
   osm:
     type: osm
     local_path: /data/planet-latest.osm.pbf
-  natural_earth:
+  natural_earth_land:
     type: shapefile
     url: https://naturalearth.s3.amazonaws.com/50m_physical/ne_50m_land.zip
+  natural_earth_ocean:
+    type: shapefile
+    url: https://naturalearth.s3.amazonaws.com/50m_physical/ne_50m_ocean.zip
+  natural_earth_lakes:
+    type: shapefile
+    url: https://naturalearth.s3.amazonaws.com/50m_physical/ne_50m_lakes.zip
 
 # Define the layers that the theme contains.
 layers:
   # Background layers from Natural Earth
   - id: "land"
     features:
-      - source: natural_earth
+      - source: natural_earth_land
         geometry: polygon
         include_when:
           '${ feature.source_layer }': ne_50m_land
   - id: "ocean"
     features:
-      - source: natural_earth
+      - source: natural_earth_ocean
         geometry: polygon
         include_when:
           '${ feature.source_layer }': ne_50m_ocean
   - id: "lakes"
     features:
-      - source: natural_earth
+      - source: natural_earth_lakes
         geometry: polygon
         include_when:
           '${ feature.source_layer }': ne_50m_lakes
@@ -43,7 +49,7 @@ layers:
         geometry: point
         min_zoom: 10
         include_when:
-          amenity: shelter
+          amenity: "shelter"
         attributes:
           - key: name
             value: '${ feature.tags.name }'
@@ -56,7 +62,7 @@ layers:
         geometry: point
         min_zoom: 10
         include_when:
-          amenity: fire_station
+          amenity: "fire_station"
         attributes:
           - key: name
             value: '${ feature.tags.name }'
@@ -67,7 +73,7 @@ layers:
         geometry: point
         min_zoom: 10
         include_when:
-          amenity: police
+          amenity: "police"
         attributes:
           - key: name
             value: '${ feature.tags.name }'
@@ -79,8 +85,8 @@ layers:
         min_zoom: 12
         include_when:
           any:
-            - amenity: water_point
-            - amenity: drinking_water
+            - amenity: "water_point"
+            - amenity: "drinking_water"
         attributes:
           - key: name
             value: '${ feature.tags.name }'
@@ -92,8 +98,8 @@ layers:
         min_zoom: 12
         include_when:
           any:
-            - aeroway: heliport
-            - aeroway: helipad
+            - aeroway: "heliport"
+            - aeroway: "helipad"
         attributes:
           - key: name
             value: '${ feature.tags.name }'
