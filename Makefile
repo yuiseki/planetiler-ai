@@ -4,6 +4,8 @@
 MEMORY_OPTIONS = --memory 20g --memory-swap -1
 JAVA_TOOL_OPTIONS = -Xms8g -Xmx8g
 
+pwd = $(shell pwd)
+
 # Common Docker run command
 DOCKER_RUN = docker run \
     -u `id -u`:`id -g` \
@@ -12,13 +14,18 @@ DOCKER_RUN = docker run \
     -v "$(pwd)/data":/data \
     ghcr.io/onthegomap/planetiler:latest
 
-# Phony targets to avoid conflicts with file names
-.PHONY: all clean admins conflicts custom disaster_prevention energy_transition global_connectivity healthcare human_security monaco railways rivers water world
-
 # Default target
 all:
 	@echo "Please specify a target. Available targets are:"
-	@echo "  admins, conflicts, custom, disaster_prevention, energy_transition, global_connectivity, healthcare, human_security, monaco, railways, rivers, water, world"
+	@echo "  admins,"
+	@echo "  conflicts,"
+	@echo "  custom,"
+	@echo "  healthcare,"
+	@echo "  monaco,"
+	@echo "  railways,"
+	@echo "  rivers,"
+	@echo "  water,"
+	@echo "  world,"
 
 # Target to generate a specific theme
 define generate_theme
@@ -38,12 +45,23 @@ $(1):
 endef
 
 # Themes that follow the standard pattern
+.PHONY: disaster_prevention
 $(eval $(call generate_theme,disaster_prevention))
+
+.PHONY: energy_transition
 $(eval $(call generate_theme,energy_transition))
+
+.PHONY: global_connectivity
 $(eval $(call generate_theme,global_connectivity))
+
+.PHONY: human_security
 $(eval $(call generate_theme,human_security))
 
+.PHONY: biodiversity
+$(eval $(call generate_theme,biodiversity))
+
 # Custom targets for scripts with different parameters
+.PHONY: admins
 admins:
 	$(DOCKER_RUN) generate-custom \
 		--schema=/data/admins.yml \
@@ -51,6 +69,7 @@ admins:
 		--force \
 		--download
 
+.PHONY: conflicts
 conflicts:
 	$(DOCKER_RUN) generate-custom \
 		--schema=/data/conflicts.yml \
@@ -58,6 +77,7 @@ conflicts:
 		--download \
 		--force
 
+.PHONY: custom
 custom:
 	docker run \
 		-u `id -u`:`id -g` \
@@ -71,6 +91,7 @@ custom:
 				--output=/data/custom.mbtiles \
 				--force
 
+.PHONY: healthcare
 healthcare:
 	docker run \
 		-u `id -u`:`id -g` \
@@ -84,6 +105,7 @@ healthcare:
 			--download \
 			--force
 
+.PHONY: monaco
 monaco:
 	docker run \
 		-u `id -u`:`id -g` \
@@ -97,18 +119,21 @@ monaco:
 			--output=/data/monaco.mbtiles \
 			--force
 
+.PHONY: railways
 railways:
 	$(DOCKER_RUN) generate-custom \
 		--schema=/data/railways.yml \
 		--output=/data/railways.mbtiles \
 		--force
 
+.PHONY: rivers
 rivers:
 	$(DOCKER_RUN) generate-custom \
 		--schema=/data/rivers.yml \
 		--output=/data/rivers.mbtiles \
 		--force
 
+.PHONY: water
 water:
 	docker run \
 		-u `id -u`:`id -g` \
@@ -122,6 +147,7 @@ water:
 				--output=/data/water.mbtiles \
 				--force
 
+.PHONY: world
 world:
 	docker run \
 		-u `id -u`:`id -g` \
@@ -142,6 +168,7 @@ world:
 			--osm-path=/data/planet-250707.osm.pbf \
 			--force
 
+.PHONY: clean
 clean:
 	@echo "Cleaning up generated files..."
 	rm -f data/*.mbtiles

@@ -1,0 +1,85 @@
+{
+  "version": 8,
+  "name": "Biodiversity",
+  "metadata": {
+    "mapbox:autocomposite": true
+  },
+  "sources": {
+    "biodiversity": {
+      "type": "vector",
+      "url": "mbtiles://{biodiversity}"
+    }
+  },
+  "layers": [
+    {
+      "id": "background",
+      "type": "background",
+      "paint": {
+        "background-color": "#f0f0f0"
+      }
+    },
+    {
+      "id": "ocean",
+      "type": "fill",
+      "source": "biodiversity",
+      "source-layer": "ocean",
+      "paint": {
+        "fill-color": "#a6cee3"
+      }
+    },
+    {
+      "id": "land",
+      "type": "fill",
+      "source": "biodiversity",
+      "source-layer": "land",
+      "paint": {
+        "fill-color": "#f5f5dc"
+      }
+    },
+    {
+      "id": "protected_areas",
+      "type": "fill",
+      "source": "biodiversity",
+      "source-layer": "protected_areas",
+      "paint": {
+        "fill-color": "#33a02c",
+        "fill-opacity": [
+          "interpolate",
+          ["linear"],
+          ["zoom"],
+          0, 0.3,
+          6, 0.4,
+          10, 0.5
+        ]
+      }
+    },
+    {
+      "id": "forests",
+      "type": "fill",
+      "source": "biodiversity",
+      "source-layer": "forests",
+      "paint": {
+        "fill-color": "#b2df8a"
+      }
+    },
+    {
+      "id": "wetlands",
+      "type": "fill",
+      "source": "biodiversity",
+      "source-layer": "wetlands",
+      "paint": {
+        "fill-color": "#1f78b4"
+      }
+    },
+    {
+      "id": "forest_loss",
+      "type": "fill",
+      "source": "biodiversity",
+      "source-layer": "forest_loss",
+      "paint": {
+        "fill-color": "#e31a1c",
+        "fill-opacity": 0.5
+      }
+    }
+  ]
+}

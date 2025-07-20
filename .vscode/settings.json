@@ -1,12 +1,14 @@
 {
     "cSpell.words": [
         "charites",
+        "DESIG",
         "Dockerized",
         "EPSG",
         "flatnode",
         "geopackage",
         "geospatial",
         "Gyazo",
+        "iucn",
         "maptiler",
         "mbtiles",
         "mmap",
@@ -17,6 +19,7 @@
         "shapefile",
         "sortedtable",
         "sparsearray",
-        "tileserver"
+        "tileserver",
+        "wdpa"
     ]
 }
