@@ -54,11 +54,14 @@ $(eval $(call generate_theme,energy_transition))
 .PHONY: global_connectivity
 $(eval $(call generate_theme,global_connectivity))
 
-.PHONY: human_security
-$(eval $(call generate_theme,human_security))
+.PHONY: water_stress
+$(eval $(call generate_theme,water_stress))
 
 .PHONY: biodiversity
 $(eval $(call generate_theme,biodiversity))
+
+.PHONY: debug_test
+$(eval $(call generate_theme,debug_test))
 
 # Custom targets for scripts with different parameters
 .PHONY: admins

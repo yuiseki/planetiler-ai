@@ -17,12 +17,10 @@ sources:
     type: shapefile
     url: "https://naciscdn.org/naturalearth/10m/physical/ne_10m_ocean.zip"
   # Data from Protected Planet (https://www.protectedplanet.net/en)
-  # The source is a File Geodatabase (.gdb) inside a zip.
-  # We specify 'geopackage' as the type, as it's a container-based format
-  # that hints at Planetiler/GDAL to inspect the contents.
+  # will select the correct layer from the shapefile.
   wdpa:
-    type: geopackage
-    url: "https://d1gam3xoknrgr2.cloudfront.net/current/WDPA_WDOECM_Jul2025_Public_all.zip"
+    type: shapefile
+    url: "https://d1gam3xoknrgr2.cloudfront.net/current/WDPA_WDOECM_Jul2025_Public_all_shp.zip"
   # IMPORTANT: User needs to download GFW data manually into /data/gfw/
   # This is a placeholder path for annual tree cover loss data.
   # The actual data might be structured as tiles (e.g., GeoTIFFs), not a single shapefile.
@@ -48,7 +46,7 @@ layers:
     features:
       - source: osm
         min_zoom: 0
-        geometry: linestring
+        geometry: line
         include_when:
           natural: coastline
   - id: glaciers
@@ -85,9 +83,7 @@ layers:
         min_zoom: 0
         geometry: polygon
         include_when:
-          or:
-            - landuse: forest
-            - natural: wood
+          landuse: forest
         attributes:
           - key: name
             value: '${ feature.tags.name }'
@@ -106,8 +102,6 @@ layers:
       - source: wdpa
         min_zoom: 0
         geometry: polygon
-        include_when:
-          '${ feature.source_layer }': WDPA_WDOECM_poly_Jul2025_all
         attributes:
           - key: name
             value: '${ feature.tags.NAME }'

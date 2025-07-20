@@ -48,6 +48,23 @@
       }
     },
     {
+      "id": "plate_boundaries",
+      "type": "line",
+      "source": "disaster_prevention",
+      "source-layer": "plate_boundaries",
+      "minzoom": 0,
+      "maxzoom": 6,
+      "layout": {
+        "line-cap": "round",
+        "line-join": "round"
+      },
+      "paint": {
+        "line-color": "#e60000",
+        "line-width": 1.5,
+        "line-dasharray": [2, 1]
+      }
+    },
+    {
       "id": "shelter",
       "type": "symbol",
       "source": "disaster_prevention",

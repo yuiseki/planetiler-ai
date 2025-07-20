@@ -1,0 +1,50 @@
+schema_name: "Debug Test"
+schema_description: "A minimal theme to test problematic syntax."
+attribution: "Internal Test"
+
+args:
+  minzoom: 0
+  maxzoom: 10
+
+sources:
+  osm:
+    type: osm
+    local_path: /data/planet-latest.osm.pbf
+  wdpa:
+    type: shapefile
+    url: "https://d1gam3xoknrgr2.cloudfront.net/current/WDPA_WDOECM_Jul2025_Public_all_shp.zip"
+
+layers:
+  # --- Forest Tag Syntax Tests ---
+  - id: "forests_single_landuse"
+    features:
+      - source: osm
+        geometry: polygon
+        include_when:
+          landuse: forest
+  - id: "forests_single_natural"
+    features:
+      - source: osm
+        geometry: polygon
+        include_when:
+          natural: wood
+  - id: "forests_or_syntax"
+    features:
+      - source: osm
+        geometry: polygon
+        include_when:
+          or:
+            - landuse: forest
+            - natural: wood
+
+  # --- Protected Areas Syntax Tests ---
+  - id: "protected_areas_nolayer"
+    features:
+      - source: wdpa
+        geometry: polygon
+  - id: "protected_areas_layername"
+    features:
+      - source: wdpa
+        geometry: polygon
+        include_when:
+          '${ feature.source_layer }': WDPA_WDOECM_Jul2025_Public_all_shp-polygons

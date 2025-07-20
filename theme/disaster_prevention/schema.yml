@@ -19,9 +19,19 @@ sources:
   natural_earth_lakes:
     type: shapefile
     url: https://naturalearth.s3.amazonaws.com/50m_physical/ne_50m_lakes.zip
+  tectonic_plates:
+    type: geojson
+    url: https://raw.githubusercontent.com/fraxen/tectonicplates/master/GeoJSON/PB2002_boundaries.json
 
 # Define the layers that the theme contains.
 layers:
+  # Plate boundaries for global context
+  - id: "plate_boundaries"
+    features:
+      - source: tectonic_plates
+        geometry: line
+        min_zoom: 0
+        max_zoom: 6
   # Background layers from Natural Earth
   - id: "land"
     features:

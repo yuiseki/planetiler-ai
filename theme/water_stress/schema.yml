@@ -1,0 +1,75 @@
+# Defines the layers for the Global Water Stress Map.
+# This theme provides a insight by visualizing environmental stress (water risk).
+
+schema_name: "Global Water Stress"
+schema_description: "A map visualizing the water stress."
+attribution: '<a href="https://www.openstreetmap.org/copyright" target="_blank">&copy; OpenStreetMap contributors</a> | <a href="https://www.wri.org/">WRI Aqueduct</a> | <a href="https://www.naturalearthdata.com/">Natural Earth</a>'
+
+sources:
+  natural_earth:
+    type: geopackage
+    url: "https://naciscdn.org/naturalearth/packages/natural_earth_vector.gpkg.zip"
+    projection: EPSG:4326
+  # Pre-processed Aqueduct 4.0 Water Risk data joined with HydroSHEDS basins
+  water_stress:
+    type: geojson
+    local_path: /data/water_risk_basins.geojson
+
+layers:
+  - id: land
+    features:
+      - source: natural_earth
+        geometry: polygon
+        include_when:
+          '${ feature.source_layer }':
+            - ne_110m_land
+            - ne_50m_land
+            - ne_10m_land
+        min_zoom:
+          10:
+            '${ feature.source_layer }': [ ne_10m_land ]
+          5:
+            '${ feature.source_layer }': [ ne_50m_land ]
+          0:
+            '${ feature.source_layer }': [ ne_110m_land ]
+        max_zoom:
+          14:
+            '${ feature.source_layer }': [ ne_10m_land ]
+          9:
+            '${ feature.source_layer }': [ ne_50m_land ]
+          4:
+            '${ feature.source_layer }': [ ne_110m_land ]
+  - id: ocean
+    features:
+      - source: natural_earth
+        geometry: polygon
+        include_when:
+          '${ feature.source_layer }':
+            - ne_110m_ocean
+            - ne_50m_ocean
+            - ne_10m_ocean
+        min_zoom:
+          10:
+            '${ feature.source_layer }': [ ne_10m_ocean ]
+          5:
+            '${ feature.source_layer }': [ ne_50m_ocean ]
+          0:
+            '${ feature.source_layer }': [ ne_110m_ocean ]
+        max_zoom:
+          14:
+            '${ feature.source_layer }': [ ne_10m_ocean ]
+          9:
+            '${ feature.source_layer }': [ ne_50m_ocean ]
+          4:
+            '${ feature.source_layer }': [ ne_110m_ocean ]
+  # --- The Core Insight Layers ---
+  # Layer 1: The Problem - Overall Water Risk (Visible at Zoom 0 for maximum impact)
+  - id: "water_stress_areas"
+    features:
+      - source: water_stress
+        geometry: polygon
+        min_zoom: 0
+        attributes:
+          - key: water_risk
+            value: '${ feature.tags.water_risk }'
+            type: integer

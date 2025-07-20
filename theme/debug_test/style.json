@@ -1,0 +1,52 @@
+{
+  "version": 8,
+  "name": "Debug Test",
+  "sources": {
+    "debug_test": {
+      "type": "vector",
+      "url": "mbtiles://{debug_test}"
+    }
+  },
+  "layers": [
+    {
+      "id": "background",
+      "type": "background",
+      "paint": { "background-color": "#000000" }
+    },
+    {
+      "id": "forests_single_landuse",
+      "type": "fill",
+      "source": "debug_test",
+      "source-layer": "forests_single_landuse",
+      "paint": { "fill-color": "#ff0000" }
+    },
+    {
+      "id": "forests_single_natural",
+      "type": "fill",
+      "source": "debug_test",
+      "source-layer": "forests_single_natural",
+      "paint": { "fill-color": "#00ff00" }
+    },
+    {
+      "id": "forests_or_syntax",
+      "type": "fill",
+      "source": "debug_test",
+      "source-layer": "forests_or_syntax",
+      "paint": { "fill-color": "#0000ff" }
+    },
+    {
+      "id": "protected_areas_nolayer",
+      "type": "fill",
+      "source": "debug_test",
+      "source-layer": "protected_areas_nolayer",
+      "paint": { "fill-color": "#ffff00" }
+    },
+    {
+      "id": "protected_areas_layername",
+      "type": "fill",
+      "source": "debug_test",
+      "source-layer": "protected_areas_layername",
+      "paint": { "fill-color": "#ff00ff" }
+    }
+  ]
+}
