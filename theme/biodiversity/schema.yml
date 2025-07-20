@@ -1,6 +1,6 @@
 schema_name: "Biodiversity"
 schema_description: "A map visualizing global biodiversity richness and threats, based on OSM, WDPA, and Global Forest Watch data."
-attribution: "<a href=\"https://www.openstreetmap.org/copyright\" target=\"_blank\">&copy; OpenStreetMap contributors</a>, <a href=\"https://www.protectedplanet.net/\" target=\"_blank\">UNEP-WCMC and IUCN</a>, <a href=\"https://www.globalforestwatch.org/\" target=\"_blank\">Global Forest Watch</a>"
+attribution: "<a href=\"https://www.openstreetmap.org/copyright\" target=\"_blank\">&copy; OpenStreetMap contributors</a>, <a href=\"https://www.protectedplanet.net/\" target=\"_blank\">UNEP-WCMC and IUCN</a>"
 
 args:
   minzoom: 0
@@ -16,18 +16,14 @@ sources:
   natural_earth_ocean:
     type: shapefile
     url: "https://naciscdn.org/naturalearth/10m/physical/ne_10m_ocean.zip"
-  # Data from Protected Planet (https://www.protectedplanet.net/en)
-  # will select the correct layer from the shapefile.
-  wdpa:
+  # WDPA data is split into 3 shapefiles, but one is >2GB and causes errors.
+  # We use the two smaller files as local sources.
+  wdpa_0:
     type: shapefile
-    url: "https://d1gam3xoknrgr2.cloudfront.net/current/WDPA_WDOECM_Jul2025_Public_all_shp.zip"
-  # IMPORTANT: User needs to download GFW data manually into /data/gfw/
-  # This is a placeholder path for annual tree cover loss data.
-  # The actual data might be structured as tiles (e.g., GeoTIFFs), not a single shapefile.
-  # For simplicity, we assume a shapefile is available.
-  # gfw_forest_loss:
-  #   type: shapefile
-  #   local_path: /data/gfw/hansen_world_loss.zip
+    local_path: /data/WDPA_polygons_0.shp
+  wdpa_2:
+    type: shapefile
+    local_path: /data/WDPA_polygons_2.shp
 
 layers:
   - id: ocean
@@ -77,16 +73,20 @@ layers:
         geometry: polygon
         include_when:
           natural: grassland
-  - id: forests
+  - id: forests_landuse
     features:
       - source: osm
         min_zoom: 0
         geometry: polygon
         include_when:
           landuse: forest
-        attributes:
-          - key: name
-            value: '${ feature.tags.name }'
+  - id: forests_natural
+    features:
+      - source: osm
+        min_zoom: 0
+        geometry: polygon
+        include_when:
+          natural: wood
   - id: wetlands
     features:
       - source: osm
@@ -94,12 +94,9 @@ layers:
         geometry: polygon
         include_when:
           natural: wetland
-        attributes:
-          - key: name
-            value: '${ feature.tags.name }'
   - id: protected_areas
     features:
-      - source: wdpa
+      - source: [ wdpa_0, wdpa_2 ]
         min_zoom: 0
         geometry: polygon
         attributes:
@@ -109,14 +106,3 @@ layers:
             value: '${ feature.tags.DESIG_ENG }'
           - key: iucn_category
             value: '${ feature.tags.IUCN_CAT }'
-  # - id: forest_loss
-  #   features:
-  #     - source: gfw_forest_loss
-  #       min_zoom: 3
-  #       geometry: polygon
-  #       # This will depend on the actual shapefile structure
-  #       # We assume a simple polygon layer for now
-  #       include_when:
-  #         '>':
-  #           - '${ feature.tags.lossyear }'
-  #           - 0 # Include all loss years

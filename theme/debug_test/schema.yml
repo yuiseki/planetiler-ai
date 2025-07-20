@@ -1,5 +1,5 @@
 schema_name: "Debug Test"
-schema_description: "A minimal theme to test problematic syntax."
+schema_description: "A minimal theme to test the wdpa_2 shapefile in isolation."
 attribution: "Internal Test"
 
 args:
@@ -7,44 +7,12 @@ args:
   maxzoom: 10
 
 sources:
-  osm:
-    type: osm
-    local_path: /data/planet-latest.osm.pbf
-  wdpa:
+  wdpa_2:
     type: shapefile
-    url: "https://d1gam3xoknrgr2.cloudfront.net/current/WDPA_WDOECM_Jul2025_Public_all_shp.zip"
+    local_path: /data/WDPA_polygons_2.shp
 
 layers:
-  # --- Forest Tag Syntax Tests ---
-  - id: "forests_single_landuse"
+  - id: "protected_areas_test"
     features:
-      - source: osm
+      - source: wdpa_2
         geometry: polygon
-        include_when:
-          landuse: forest
-  - id: "forests_single_natural"
-    features:
-      - source: osm
-        geometry: polygon
-        include_when:
-          natural: wood
-  - id: "forests_or_syntax"
-    features:
-      - source: osm
-        geometry: polygon
-        include_when:
-          or:
-            - landuse: forest
-            - natural: wood
-
-  # --- Protected Areas Syntax Tests ---
-  - id: "protected_areas_nolayer"
-    features:
-      - source: wdpa
-        geometry: polygon
-  - id: "protected_areas_layername"
-    features:
-      - source: wdpa
-        geometry: polygon
-        include_when:
-          '${ feature.source_layer }': WDPA_WDOECM_Jul2025_Public_all_shp-polygons

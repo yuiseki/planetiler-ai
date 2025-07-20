@@ -100,10 +100,19 @@
       }
     },
     {
-      "id": "forests",
+      "id": "forests_natural",
       "type": "fill",
       "source": "biodiversity",
-      "source-layer": "forests",
+      "source-layer": "forests_natural",
+      "paint": {
+        "fill-color": "#b2df8a"
+      }
+    },
+    {
+      "id": "forests_landuse",
+      "type": "fill",
+      "source": "biodiversity",
+      "source-layer": "forests_landuse",
       "paint": {
         "fill-color": "#b2df8a"
       }
