@@ -1,18 +1,21 @@
-schema_name: "Debug Test"
-schema_description: "A minimal theme to test the wdpa_2 shapefile in isolation."
-attribution: "Internal Test"
-
-args:
-  minzoom: 0
-  maxzoom: 10
+schema_name: Debug Test
+schema_description: A minimal theme for testing with only land and ocean.
+attribution: "Natural Earth"
 
 sources:
-  wdpa_2:
+  natural_earth:
     type: shapefile
-    local_path: /data/WDPA_polygons_2.shp
+    url: https://naturalearth.s3.amazonaws.com/110m_physical/ne_110m_land.zip
+  ocean:
+    type: shapefile
+    url: https://naturalearth.s3.amazonaws.com/110m_physical/ne_110m_ocean.zip
 
 layers:
-  - id: "protected_areas_test"
+  - id: "land"
     features:
-      - source: wdpa_2
+      - source: natural_earth
+        geometry: polygon
+  - id: "ocean"
+    features:
+      - source: ocean
         geometry: polygon

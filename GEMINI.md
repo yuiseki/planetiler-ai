@@ -76,4 +76,8 @@ I will follow these steps to add a new theme.
     ```bash
     THEME={THEME_NAME} OUTPUT={THEME_NAME}.png node screenshot.js
     ```
+3.  **Troubleshooting**: If the screenshot fails or the server doesn't respond, I will check the container logs to diagnose the issue.
+    ```bash
+    docker compose logs tileserver | tail -n 30
+    ```
 This ensures a complete, verified, and safe workflow for every new theme.
