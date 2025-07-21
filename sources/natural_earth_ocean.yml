@@ -1,0 +1,4 @@
+sources:
+  natural_earth_ocean:
+    type: shapefile
+    url: https://naturalearth.s3.amazonaws.com/50m_physical/ne_50m_ocean.zip

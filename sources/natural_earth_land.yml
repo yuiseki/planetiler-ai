@@ -1,0 +1,4 @@
+sources:
+  natural_earth_land:
+    type: shapefile
+    url: https://naturalearth.s3.amazonaws.com/50m_physical/ne_50m_land.zip

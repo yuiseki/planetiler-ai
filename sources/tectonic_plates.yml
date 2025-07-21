@@ -1,0 +1,4 @@
+sources:
+  tectonic_plates:
+    type: geojson
+    url: https://raw.githubusercontent.com/fraxen/tectonicplates/master/GeoJSON/PB2002_plates.json

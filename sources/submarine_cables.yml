@@ -1,2 +1,4 @@
-type: geojson
-url: https://www.submarinecablemap.com/api/v3/cable/cable-geo.json
+sources:
+  submarine_cables:
+    type: geojson
+    url: https://www.submarinecablemap.com/api/v3/cable/cable-geo.json
