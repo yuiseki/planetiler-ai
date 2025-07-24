@@ -2,9 +2,9 @@
   "version": 8,
   "name": "Railways Minimal",
   "sources": {
-    "railways": {
+    "railways_jp": {
       "type": "vector",
-      "url": "mbtiles://{railways}"
+      "url": "mbtiles://{railways_jp}"
     }
   },
   "layers": [
@@ -18,7 +18,7 @@
     {
       "id": "ocean",
       "type": "fill",
-      "source": "railways",
+      "source": "railways_jp",
       "source-layer": "ocean",
       "paint": {
         "fill-color": "#a0c8f0"
@@ -27,7 +27,7 @@
     {
       "id": "land",
       "type": "fill",
-      "source": "railways",
+      "source": "railways_jp",
       "source-layer": "land",
       "paint": {
         "fill-color": "#f0f0f0"
@@ -36,7 +36,7 @@
     {
       "id": "lakes",
       "type": "fill",
-      "source": "railways",
+      "source": "railways_jp",
       "source-layer": "lakes",
       "paint": {
         "fill-color": "#a0c8f0"
@@ -45,7 +45,7 @@
     {
       "id": "railways_merged_line",
       "type": "line",
-      "source": "railways",
+      "source": "railways_jp",
       "source-layer": "railways_merged",
       "paint": {
         "line-color": "#ff0000",
@@ -55,7 +55,7 @@
     {
       "id": "railways_unmerged_line",
       "type": "line",
-      "source": "railways",
+      "source": "railways_jp",
       "source-layer": "railways_unmerged",
       "paint": {
         "line-color": "#0000ff",
@@ -65,7 +65,7 @@
     {
       "id": "railways_low_line",
       "type": "line",
-      "source": "railways",
+      "source": "railways_jp",
       "source-layer": "railways_low",
       "paint": {
         "line-color": "#00ff00",
