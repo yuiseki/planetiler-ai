@@ -23,6 +23,7 @@ all:
 	@echo "  healthcare,"
 	@echo "  monaco,"
 	@echo "  railways,"
+	@echo "  railways_jp,"
 	@echo "  rivers,"
 	@echo "  water,"
 	@echo "  world,"
@@ -62,6 +63,15 @@ $(eval $(call generate_theme,biodiversity))
 
 .PHONY: debug_test
 $(eval $(call generate_theme,debug_test))
+
+.PHONY: railways_jp
+$(eval $(call generate_theme,railways_jp))
+
+.PHONY: climate_change_impacts
+$(eval $(call generate_theme,climate_change_impacts))
+
+.PHONY: debug_test_climate
+$(eval $(call generate_theme,debug_test_climate))
 
 # Custom targets for scripts with different parameters
 .PHONY: admins
@@ -168,7 +178,8 @@ world:
 			--fetch-wikidata \
 			--nodemap-type=sparsearray \
 			--nodemap-storage=mmap \
-			--osm-path=/data/planet-250707.osm.pbf \
+			--osm-path=/data/planet-latest.osm.pbf \
+			--output=/data/output-new.mbtiles \
 			--force
 
 .PHONY: clean

@@ -1,0 +1,120 @@
+schema_name: Railways JP
+schema_description: Railways in Japan (merged & un-merged lines, z0-14)
+attribution: <a href="https://www.openstreetmap.org/copyright" target="_blank">&copy; OpenStreetMap contributors</a>
+
+sources:
+  natural_earth:
+    type: geopackage
+    url: "https://naciscdn.org/naturalearth/packages/natural_earth_vector.gpkg.zip"
+    projection: EPSG:4326
+  osm_japan:
+    type: osm
+    url: https://download.geofabrik.de/asia/japan-latest.osm.pbf
+
+layers:
+  - id: land
+    features:
+      - source: natural_earth
+        geometry: polygon
+        include_when:
+          '${ feature.source_layer }':
+            - ne_110m_land
+            - ne_50m_land
+            - ne_10m_land
+        min_zoom:
+          10:
+            '${ feature.source_layer }': [ ne_10m_land ]
+          5:
+            '${ feature.source_layer }': [ ne_50m_land ]
+          0:
+            '${ feature.source_layer }': [ ne_110m_land ]
+        max_zoom:
+          14:
+            '${ feature.source_layer }': [ ne_10m_land ]
+          9:
+            '${ feature.source_layer }': [ ne_50m_land ]
+          4:
+            '${ feature.source_layer }': [ ne_110m_land ]
+
+  - id: ocean
+    features:
+      - source: natural_earth
+        geometry: polygon
+        include_when:
+          '${ feature.source_layer }':
+            - ne_110m_ocean
+            - ne_50m_ocean
+            - ne_10m_ocean
+        min_zoom:
+          10:
+            '${ feature.source_layer }': [ ne_10m_ocean ]
+          5:
+            '${ feature.source_layer }': [ ne_50m_ocean ]
+          0:
+            '${ feature.source_layer }': [ ne_110m_ocean ]
+        max_zoom:
+          14:
+            '${ feature.source_layer }': [ ne_10m_ocean ]
+          9:
+            '${ feature.source_layer }': [ ne_50m_ocean ]
+          4:
+            '${ feature.source_layer }': [ ne_110m_ocean ]
+
+  - id: lakes
+    features:
+      - source: natural_earth
+        geometry: polygon
+        include_when:
+          '${ feature.source_layer }':
+            - ne_110m_lakes
+            - ne_50m_lakes
+            - ne_10m_lakes
+        min_zoom:
+          10:
+            '${ feature.source_layer }': [ ne_10m_lakes ]
+          5:
+            '${ feature.source_layer }': [ ne_50m_lakes ]
+          0:
+            '${ feature.source_layer }': [ ne_110m_lakes ]
+        max_zoom:
+          14:
+            '${ feature.source_layer }': [ ne_10m_lakes ]
+          9:
+            '${ feature.source_layer }': [ ne_50m_lakes ]
+          4:
+            '${ feature.source_layer }': [ ne_110m_lakes ]
+
+  - id: railways_low
+    features:
+      - source: osm_japan
+        geometry: line
+        min_zoom: 0
+        max_zoom: 3
+        include_when:
+          railway: __any__
+    tile_post_process:
+      merge_line_strings:
+        min_length: 0
+        tolerance: -1
+        buffer: -1
+
+  - id: railways_merged
+    features:
+      - source: osm_japan
+        geometry: line
+        min_zoom: 4
+        include_when:
+          railway: __any__
+    tile_post_process:
+      merge_line_strings:
+        min_length: 0
+        tolerance: -1
+        buffer: -1
+
+  - id: railways_unmerged
+    features:
+      - source: osm_japan
+        geometry: line
+        min_zoom: 4
+        include_when:
+          railway: __any__

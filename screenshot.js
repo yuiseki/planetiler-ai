@@ -2,9 +2,14 @@ const puppeteer = require('puppeteer');
 const path = require('path');
 
 (async () => {
-  const theme = process.argv[2] || 'disaster_prevention';
-  const url = `http://localhost:8000/styles/${theme}/#2/0/0`;
-  const screenshotPath = path.resolve('./tmp/screenshot.png');
+  const theme = process.env.THEME || 'disaster_prevention';
+  const outputPath = process.env.OUTPUT || './tmp/screenshot.png';
+  const zoom = process.env.ZOOM || '2';
+  const lat = process.env.LAT || '0';
+  const lon = process.env.LON || '0';
+
+  const url = `http://localhost:8000/styles/${theme}/#${zoom}/${lat}/${lon}`;
+  const screenshotPath = path.resolve(outputPath);
 
   console.log(`Taking screenshot of ${url}`);
 

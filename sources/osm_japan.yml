@@ -1,0 +1,3 @@
+# sources/osm_japan.yml
+url: https://download.geofabrik.de/asia/japan-latest.osm.pbf
+type: osm

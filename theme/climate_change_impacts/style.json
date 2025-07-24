@@ -1,0 +1,87 @@
+{
+  "version": 8,
+  "name": "Climate Change Impacts",
+  "sources": {
+    "planetiler": {
+      "type": "vector",
+      "url": "pmtiles://./climate_change_impacts.pmtiles"
+    }
+  },
+  "layers": [
+    {
+      "id": "background",
+      "type": "background",
+      "paint": {
+        "background-color": "#f0f0f0"
+      }
+    },
+    {
+      "id": "sea_level_rise",
+      "type": "fill",
+      "source": "planetiler",
+      "source-layer": "sea_level_rise",
+      "paint": {
+        "fill-color": [
+          "match",
+          ["get", "scenario"],
+          "+1m", "#a6cee3",
+          "+2m", "#1f78b4",
+          "+5m", "#b2df8a",
+          "#ccc"
+        ],
+        "fill-opacity": 0.6
+      }
+    },
+    {
+      "id": "extreme_weather",
+      "type": "fill",
+      "source": "planetiler",
+      "source-layer": "extreme_weather",
+      "paint": {
+        "fill-color": [
+          "match",
+          ["get", "risk_type"],
+          "heatwave", "#fb9a99",
+          "drought", "#fdbf6f",
+          "wildfire", "#e31a1c",
+          "#ccc"
+        ],
+        "fill-opacity": 0.7
+      }
+    },
+    {
+      "id": "ecosystem_shifts",
+      "type": "fill",
+      "source": "planetiler",
+      "source-layer": "ecosystem_shifts",
+      "paint": {
+        "fill-color": [
+          "match",
+          ["get", "shift_type"],
+          "coral_bleaching", "#cab2d6",
+          "permafrost_thaw", "#6a3d9a",
+          "vegetation_change", "#ffff99",
+          "#ccc"
+        ],
+        "fill-opacity": 0.7
+      }
+    },
+    {
+      "id": "adaptation_infrastructure",
+      "type": "circle",
+      "source": "planetiler",
+      "source-layer": "adaptation_infrastructure",
+      "paint": {
+        "circle-radius": 5,
+        "circle-color": [
+          "match",
+          ["get", "infra_type"],
+          "sea_wall", "#33a02c",
+          "green_infrastructure", "#b2df8a",
+          "retention_basin", "#a6cee3",
+          "#000"
+        ]
+      }
+    }
+  ]
+}

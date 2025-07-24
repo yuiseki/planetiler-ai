@@ -1,0 +1,62 @@
+{
+  "version": 8,
+  "name": "Debug Climate Test",
+  "sources": {
+    "planetiler": {
+      "type": "vector",
+      "url": "mbtiles://debug_test_climate.mbtiles"
+    }
+  },
+  "layers": [
+    {
+      "id": "background",
+      "type": "background",
+      "paint": {
+        "background-color": "#f0f0f0"
+      }
+    },
+    {
+      "id": "sea_level_rise",
+      "type": "line",
+      "source": "planetiler",
+      "source-layer": "sea_level_rise",
+      "paint": {
+        "line-color": "#1f78b4",
+        "line-width": 2
+      }
+    },
+    {
+      "id": "extreme_weather",
+      "type": "circle",
+      "source": "planetiler",
+      "source-layer": "extreme_weather",
+      "paint": {
+        "circle-radius": 6,
+        "circle-color": "#e31a1c",
+        "circle-stroke-color": "#fff",
+        "circle-stroke-width": 1
+      }
+    },
+    {
+      "id": "ecosystem_shifts",
+      "type": "fill",
+      "source": "planetiler",
+      "source-layer": "ecosystem_shifts",
+      "paint": {
+        "fill-color": "#33a02c",
+        "fill-opacity": 0.5
+      }
+    },
+    {
+      "id": "adaptation_infrastructure",
+      "type": "line",
+      "source": "planetiler",
+      "source-layer": "adaptation_infrastructure",
+      "paint": {
+        "line-color": "#000000",
+        "line-width": 3,
+        "line-dasharray": [2, 2]
+      }
+    }
+  ]
+}

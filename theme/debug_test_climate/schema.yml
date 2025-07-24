@@ -1,0 +1,65 @@
+# Schema for Debug Climate Theme
+# This schema validates the climate change theme structure using OpenStreetMap data.
+
+sources:
+  osm:
+    type: osm
+    url: https://download.geofabrik.de/asia/japan-latest.osm.pbf
+
+layers:
+  - id: sea_level_rise
+    features:
+      - source: osm
+        geometry: line
+        min_zoom: 0
+        max_zoom: 8
+        include_when:
+          natural: coastline
+        attributes:
+          - key: scenario
+            type: string
+            value: "+1m" # Dummy value
+
+  - id: extreme_weather
+    features:
+      - source: osm
+        geometry: point
+        min_zoom: 0
+        max_zoom: 8
+        include_when:
+          natural: volcano
+        attributes:
+          - key: risk_type
+            type: string
+            value: "wildfire" # Dummy value
+          - key: risk_level
+            type: integer
+            value: 5 # Dummy value
+
+  - id: ecosystem_shifts
+    features:
+      - source: osm
+        geometry: polygon
+        min_zoom: 0
+        max_zoom: 8
+        include_when:
+          any:
+            - natural: wood
+            - landuse: forest
+        attributes:
+          - key: shift_type
+            type: string
+            value: "vegetation_change" # Dummy value
+
+  - id: adaptation_infrastructure
+    features:
+      - source: osm
+        geometry: line
+        min_zoom: 8
+        max_zoom: 8
+        include_when:
+          man_made: dyke
+        attributes:
+          - key: infra_type
+            type: string
+            value: "sea_wall" # Dummy value

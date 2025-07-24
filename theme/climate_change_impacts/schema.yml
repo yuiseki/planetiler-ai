@@ -1,0 +1,62 @@
+# Schema for Climate Change Impacts & Adaptation Theme
+# This schema defines the data layers for visualizing climate change impacts.
+
+layers:
+  sea_level_rise:
+    datasource: sea_level_rise
+    description: "Inundation zones for different sea level rise scenarios."
+    minzoom: 0
+    maxzoom: 8
+    attributes:
+      - name: scenario
+        type: string
+        description: "Sea level rise scenario (e.g., '+1m', '+2m', '+5m')"
+        values:
+          - "+1m"
+          - "+2m"
+          - "+5m"
+
+  extreme_weather:
+    datasource: extreme_weather
+    description: "Areas at high risk of extreme weather events."
+    minzoom: 0
+    maxzoom: 6
+    attributes:
+      - name: risk_type
+        type: string
+        description: "Type of extreme weather risk"
+        values:
+          - "heatwave"
+          - "drought"
+          - "wildfire"
+      - name: risk_level
+        type: integer
+        description: "Risk level from 1 (low) to 5 (high)"
+
+  ecosystem_shifts:
+    datasource: ecosystem_shifts
+    description: "Areas where ecosystems are projected to shift."
+    minzoom: 0
+    maxzoom: 6
+    attributes:
+      - name: shift_type
+        type: string
+        description: "Type of ecosystem shift"
+        values:
+          - "coral_bleaching"
+          - "permafrost_thaw"
+          - "vegetation_change"
+
+  adaptation_infrastructure:
+    datasource: adaptation_infrastructure
+    description: "Location of climate change adaptation infrastructure."
+    minzoom: 8
+    maxzoom: 14
+    attributes:
+      - name: infra_type
+        type: string
+        description: "Type of adaptation infrastructure"
+        values:
+          - "sea_wall"
+          - "green_infrastructure"
+          - "retention_basin"
