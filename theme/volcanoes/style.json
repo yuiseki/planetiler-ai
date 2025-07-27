@@ -1,0 +1,47 @@
+{
+  "version": 8,
+  "name": "Volcanoes",
+  "sources": {
+    "volcanoes": {
+      "type": "vector",
+      "url": "mbtiles://{volcanoes}"
+    }
+  },
+  "layers": [
+    {
+      "id": "background",
+      "type": "background",
+      "paint": {
+        "background-color": "#f0f0f0"
+      }
+    },
+    {
+      "id": "ocean",
+      "type": "fill",
+      "source": "volcanoes",
+      "source-layer": "ocean",
+      "paint": {
+        "fill-color": "#a0c8f0"
+      }
+    },
+    {
+      "id": "land",
+      "type": "fill",
+      "source": "volcanoes",
+      "source-layer": "land",
+      "paint": {
+        "fill-color": "#d0f0c0"
+      }
+    },
+    {
+      "id": "volcanoes",
+      "type": "circle",
+      "source": "volcanoes",
+      "source-layer": "volcanoes",
+      "paint": {
+        "circle-color": "#ff0000",
+        "circle-radius": 4
+      }
+    }
+  ]
+}
