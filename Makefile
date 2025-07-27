@@ -73,6 +73,9 @@ $(eval $(call generate_theme,climate_change_impacts))
 .PHONY: debug_test_climate
 $(eval $(call generate_theme,debug_test_climate))
 
+.PHONY: volcanoes
+$(eval $(call generate_theme,volcanoes))
+
 # Custom targets for scripts with different parameters
 .PHONY: admins
 admins:
