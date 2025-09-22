@@ -12,7 +12,7 @@
       "id": "background",
       "type": "background",
       "paint": {
-        "background-color": "#f0f0f0"
+        "background-color": "#45516e"
       }
     },
     {
@@ -30,7 +30,7 @@
       "source": "rivers",
       "source-layer": "land",
       "paint": {
-        "fill-color": "#f0f0f0"
+        "fill-color": "#45516e"
       }
     },
     {

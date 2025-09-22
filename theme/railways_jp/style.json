@@ -12,7 +12,7 @@
       "id": "background",
       "type": "background",
       "paint": {
-        "background-color": "#a0c8f0"
+        "background-color": "#45516e"
       }
     },
     {
@@ -30,7 +30,7 @@
       "source": "railways_jp",
       "source-layer": "land",
       "paint": {
-        "fill-color": "#f0f0f0"
+        "fill-color": "#45516e"
       }
     },
     {

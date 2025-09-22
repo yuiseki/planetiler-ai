@@ -13,7 +13,7 @@
       "id": "background",
       "type": "background",
       "paint": {
-        "background-color": "#4691f2"
+        "background-color": "#45516e"
       }
     },
     {
@@ -22,7 +22,7 @@
       "source": "debug_test",
       "source-layer": "land",
       "paint": {
-        "fill-color": "#99cc66"
+        "fill-color": "#45516e"
       }
     },
     {

@@ -17,7 +17,7 @@
       "id": "background",
       "type": "background",
       "paint": {
-        "background-color": "#0c1021"
+        "background-color": "#45516e"
       }
     },
     {
@@ -26,7 +26,7 @@
       "source": "global_connectivity",
       "source-layer": "land",
       "paint": {
-        "fill-color": "#182038"
+        "fill-color": "#45516e"
       }
     },
     {

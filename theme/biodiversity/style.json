@@ -15,7 +15,7 @@
       "id": "background",
       "type": "background",
       "paint": {
-        "background-color": "#f0f0f0"
+        "background-color": "#45516e"
       }
     },
     {
@@ -33,7 +33,7 @@
       "source": "biodiversity",
       "source-layer": "land",
       "paint": {
-        "fill-color": "#f5f5dc"
+        "fill-color": "#45516e"
       }
     },
     {

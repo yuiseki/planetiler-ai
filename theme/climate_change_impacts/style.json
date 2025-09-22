@@ -12,7 +12,7 @@
       "id": "background",
       "type": "background",
       "paint": {
-        "background-color": "#f0f0f0"
+        "background-color": "#45516e"
       }
     },
     {
@@ -23,10 +23,16 @@
       "paint": {
         "fill-color": [
           "match",
-          ["get", "scenario"],
-          "+1m", "#a6cee3",
-          "+2m", "#1f78b4",
-          "+5m", "#b2df8a",
+          [
+            "get",
+            "scenario"
+          ],
+          "+1m",
+          "#a6cee3",
+          "+2m",
+          "#1f78b4",
+          "+5m",
+          "#b2df8a",
           "#ccc"
         ],
         "fill-opacity": 0.6
@@ -40,10 +46,16 @@
       "paint": {
         "fill-color": [
           "match",
-          ["get", "risk_type"],
-          "heatwave", "#fb9a99",
-          "drought", "#fdbf6f",
-          "wildfire", "#e31a1c",
+          [
+            "get",
+            "risk_type"
+          ],
+          "heatwave",
+          "#fb9a99",
+          "drought",
+          "#fdbf6f",
+          "wildfire",
+          "#e31a1c",
           "#ccc"
         ],
         "fill-opacity": 0.7
@@ -57,10 +69,16 @@
       "paint": {
         "fill-color": [
           "match",
-          ["get", "shift_type"],
-          "coral_bleaching", "#cab2d6",
-          "permafrost_thaw", "#6a3d9a",
-          "vegetation_change", "#ffff99",
+          [
+            "get",
+            "shift_type"
+          ],
+          "coral_bleaching",
+          "#cab2d6",
+          "permafrost_thaw",
+          "#6a3d9a",
+          "vegetation_change",
+          "#ffff99",
           "#ccc"
         ],
         "fill-opacity": 0.7
@@ -75,10 +93,16 @@
         "circle-radius": 5,
         "circle-color": [
           "match",
-          ["get", "infra_type"],
-          "sea_wall", "#33a02c",
-          "green_infrastructure", "#b2df8a",
-          "retention_basin", "#a6cee3",
+          [
+            "get",
+            "infra_type"
+          ],
+          "sea_wall",
+          "#33a02c",
+          "green_infrastructure",
+          "#b2df8a",
+          "retention_basin",
+          "#a6cee3",
           "#000"
         ]
       }

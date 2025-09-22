@@ -14,7 +14,7 @@
       "id": "background",
       "type": "background",
       "paint": {
-        "background-color": "#f8f4f0"
+        "background-color": "#45516e"
       }
     },
     {
@@ -32,7 +32,7 @@
       "source": "water_stress",
       "source-layer": "land",
       "paint": {
-        "fill-color": "#cccccc"
+        "fill-color": "#45516e"
       }
     },
     {
