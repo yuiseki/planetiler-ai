@@ -1,0 +1,190 @@
+{
+  "version": 8,
+  "name": "Peacekeeping Network",
+  "metadata": {
+    "maptiler:license": "https://www.maptiler.com/license/",
+    "maptiler:copyright": "Copyright 2024 Yuiseki Inc."
+  },
+  "sources": {
+    "peacekeeping_network": {
+      "type": "vector",
+      "url": "mbtiles://{peacekeeping_network}"
+    }
+  },
+  "glyphs": "https://fonts.tilehosting.com/{fontstack}/{range}.pbf",
+  "layers": [
+    {
+      "id": "background",
+      "type": "background",
+      "paint": {
+        "background-color": "#03070f"
+      }
+    },
+    {
+      "id": "land",
+      "type": "fill",
+      "source": "peacekeeping_network",
+      "source-layer": "land",
+      "paint": {
+        "fill-color": "#162236"
+      }
+    },
+    {
+      "id": "ocean",
+      "type": "fill",
+      "source": "peacekeeping_network",
+      "source-layer": "ocean",
+      "paint": {
+        "fill-color": "#03070f"
+      }
+    },
+    {
+      "id": "peacekeeping_hq_glow",
+      "type": "circle",
+      "source": "peacekeeping_network",
+      "source-layer": "peacekeeping_hq",
+      "minzoom": 0,
+      "paint": {
+        "circle-color": "#ffbe5c",
+        "circle-radius": [
+          "interpolate",
+          ["linear"],
+          ["zoom"],
+          0,
+          ["*", ["get", "deployment_scale"], 1.8],
+          6,
+          ["*", ["get", "deployment_scale"], 4.5]
+        ],
+        "circle-opacity": 0.25
+      }
+    },
+    {
+      "id": "peacekeeping_hq",
+      "type": "circle",
+      "source": "peacekeeping_network",
+      "source-layer": "peacekeeping_hq",
+      "minzoom": 0,
+      "paint": {
+        "circle-color": [
+          "interpolate",
+          ["linear"],
+          ["get", "tcc_count"],
+          0,
+          "#ffe29f",
+          5,
+          "#ffb45c",
+          15,
+          "#ff6f61"
+        ],
+        "circle-radius": [
+          "interpolate",
+          ["linear"],
+          ["zoom"],
+          0,
+          ["+", 2.5, ["*", ["get", "deployment_scale"], 0.6]],
+          6,
+          ["+", 4, ["*", ["get", "deployment_scale"], 1.6]]
+        ],
+        "circle-stroke-width": 1.2,
+        "circle-stroke-color": "#1f2838",
+        "circle-opacity": 0.95
+      }
+    },
+    {
+      "id": "peacekeeping_deployments_glow",
+      "type": "circle",
+      "source": "peacekeeping_network",
+      "source-layer": "peacekeeping_deployments",
+      "minzoom": 1,
+      "paint": {
+        "circle-color": "#34d6ff",
+        "circle-radius": [
+          "interpolate",
+          ["linear"],
+          ["zoom"],
+          1,
+          ["*", ["get", "deployment_scale"], 0.8],
+          6,
+          ["*", ["get", "deployment_scale"], 2.2]
+        ],
+        "circle-opacity": 0.18
+      }
+    },
+    {
+      "id": "peacekeeping_deployments",
+      "type": "circle",
+      "source": "peacekeeping_network",
+      "source-layer": "peacekeeping_deployments",
+      "minzoom": 1,
+      "paint": {
+        "circle-color": [
+          "interpolate",
+          ["linear"],
+          ["get", "troops"],
+          0,
+          "#5ad7ff",
+          500,
+          "#34b6ff",
+          2000,
+          "#1d7dff"
+        ],
+        "circle-radius": [
+          "interpolate",
+          ["linear"],
+          ["zoom"],
+          1,
+          ["+", 1.5, ["*", ["get", "deployment_scale"], 0.4]],
+          6,
+          ["+", 3, ["*", ["get", "deployment_scale"], 1.2]]
+        ],
+        "circle-stroke-color": "#0c1624",
+        "circle-stroke-width": 0.6,
+        "circle-opacity": 0.85
+      }
+    },
+    {
+      "id": "peacekeeping_police",
+      "type": "symbol",
+      "source": "peacekeeping_network",
+      "source-layer": "peacekeeping_deployments",
+      "minzoom": 2,
+      "filter": ["==", ["get", "has_unpol"], true],
+      "layout": {
+        "icon-image": "police-15",
+        "icon-size": 0.9,
+        "icon-allow-overlap": true,
+        "icon-ignore-placement": true,
+        "text-field": "{mission}",
+        "text-font": ["Noto Sans Regular"],
+        "text-size": 10,
+        "text-offset": [0, 1.3],
+        "text-anchor": "top"
+      },
+      "paint": {
+        "text-color": "#9ecfff",
+        "text-halo-color": "#02101f",
+        "text-halo-width": 1
+      }
+    },
+    {
+      "id": "peacekeeping_hq_labels",
+      "type": "symbol",
+      "source": "peacekeeping_network",
+      "source-layer": "peacekeeping_hq",
+      "minzoom": 3,
+      "layout": {
+        "text-field": "{mission}\n{location}",
+        "text-font": ["Noto Sans Bold"],
+        "text-size": 11,
+        "text-anchor": "top",
+        "text-offset": [0, 1.2],
+        "text-line-height": 1.1
+      },
+      "paint": {
+        "text-color": "#ffe7c2",
+        "text-halo-color": "#08111e",
+        "text-halo-width": 1.4
+      }
+    }
+  ]
+}

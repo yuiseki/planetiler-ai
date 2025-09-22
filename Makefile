@@ -12,6 +12,7 @@ DOCKER_RUN = docker run \
     $(MEMORY_OPTIONS) \
     -e JAVA_TOOL_OPTIONS="$(JAVA_TOOL_OPTIONS)" \
     -v "$(pwd)/data":/data \
+    -v "/everything/osm/planet":/osm_planet:ro \
     ghcr.io/onthegomap/planetiler:latest
 
 # Default target
@@ -92,6 +93,23 @@ conflicts:
 		--output=/data/conflicts.mbtiles \
 		--download \
 		--force
+
+.PHONY: peacekeeping_network
+peacekeeping_network:
+	@echo "Preparing data for theme: peacekeeping_network..."
+	@mkdir -p tmp
+	@python theme/peacekeeping_network/build_geojson.py
+	@echo "Generating theme: peacekeeping_network..."
+	@cp "theme/peacekeeping_network/schema.yml" "data/peacekeeping_network.yml"
+	$(DOCKER_RUN) generate-custom \
+		--schema=/data/peacekeeping_network.yml \
+		--output=/data/peacekeeping_network.mbtiles \
+		--download \
+		--force
+	@echo "Theme peacekeeping_network generated successfully."
+	@echo "Next steps:"
+	@echo "1. Copy the style file: cp theme/peacekeeping_network/style.json data/peacekeeping_network.json"
+	@echo "2. Update data/config.json to include the new theme."
 
 .PHONY: custom
 custom:
