@@ -1,0 +1,150 @@
+schema_name: "Global Seismic Alerts"
+schema_description: "過去30日間に発生したM4.5以上の地震とテクトニックプレート境界を重ね、危険度と再注視すべき地域を可視化します。"
+attribution: "<a href=\"https://www.openstreetmap.org/copyright\" target=\"_blank\">&copy; OpenStreetMap contributors</a> | USGS Earthquake Hazards Program"
+
+sources:
+  osm:
+    type: osm
+    local_path: /osm_planet/planet-latest.osm.pbf
+
+  natural_earth:
+    type: geopackage
+    url: "https://naciscdn.org/naturalearth/packages/natural_earth_vector.gpkg.zip"
+    projection: EPSG:4326
+
+  tectonic_plates:
+    type: geojson
+    local_path: /data/sources/raw.githubusercontent.com_fraxen_tectonicplates_master_GeoJSON_PB2002_boundaries.json
+
+  earthquakes:
+    type: geojson
+    local_path: /data/global_seismic_alerts_events.geojson
+
+layers:
+  - id: "land"
+    features:
+      - source: natural_earth
+        geometry: polygon
+        include_when:
+          '${ feature.source_layer }':
+            - ne_110m_land
+            - ne_50m_land
+            - ne_10m_land
+        min_zoom:
+          10:
+            '${ feature.source_layer }': [ ne_10m_land ]
+          5:
+            '${ feature.source_layer }': [ ne_50m_land ]
+          0:
+            '${ feature.source_layer }': [ ne_110m_land ]
+        max_zoom:
+          14:
+            '${ feature.source_layer }': [ ne_10m_land ]
+          9:
+            '${ feature.source_layer }': [ ne_50m_land ]
+          4:
+            '${ feature.source_layer }': [ ne_110m_land ]
+
+  - id: "ocean"
+    features:
+      - source: natural_earth
+        geometry: polygon
+        include_when:
+          '${ feature.source_layer }':
+            - ne_110m_ocean
+            - ne_50m_ocean
+            - ne_10m_ocean
+        min_zoom:
+          10:
+            '${ feature.source_layer }': [ ne_10m_ocean ]
+          5:
+            '${ feature.source_layer }': [ ne_50m_ocean ]
+          0:
+            '${ feature.source_layer }': [ ne_110m_ocean ]
+        max_zoom:
+          14:
+            '${ feature.source_layer }': [ ne_10m_ocean ]
+          9:
+            '${ feature.source_layer }': [ ne_50m_ocean ]
+          4:
+            '${ feature.source_layer }': [ ne_110m_ocean ]
+
+  - id: "tectonic_boundaries"
+    features:
+      - source: tectonic_plates
+        geometry: line
+        min_zoom: 0
+        attributes:
+          - key: plate_a
+            value: '${ feature.tags.PlateA }'
+          - key: plate_b
+            value: '${ feature.tags.PlateB }'
+
+  - id: "earthquake_glow"
+    features:
+      - source: earthquakes
+        geometry: point
+        min_zoom: 0
+        attributes:
+          - key: mag
+            value: '${ feature.tags.mag }'
+          - key: depth_km
+            value: '${ feature.tags.depth_km }'
+          - key: hazard_level
+            value: '${ feature.tags.hazard_level }'
+          - key: recent_window
+            value: '${ feature.tags.recent_window }'
+          - key: tsunami
+            value: '${ feature.tags.tsunami }'
+          - key: time_utc
+            value: '${ feature.tags.time_utc }'
+          - key: place
+            value: '${ feature.tags.place }'
+
+  - id: "earthquakes"
+    features:
+      - source: earthquakes
+        geometry: point
+        min_zoom: 0
+        attributes:
+          - key: mag
+            value: '${ feature.tags.mag }'
+          - key: depth_km
+            value: '${ feature.tags.depth_km }'
+          - key: hazard_level
+            value: '${ feature.tags.hazard_level }'
+          - key: recent_window
+            value: '${ feature.tags.recent_window }'
+          - key: tsunami
+            value: '${ feature.tags.tsunami }'
+          - key: time_utc
+            value: '${ feature.tags.time_utc }'
+          - key: place
+            value: '${ feature.tags.place }'
+
+  - id: "earthquake_labels"
+    features:
+      - source: earthquakes
+        geometry: point
+        min_zoom: 2
+        attributes:
+          - key: mag
+            value: '${ feature.tags.mag }'
+          - key: place
+            value: '${ feature.tags.place }'
+          - key: hazard_level
+            value: '${ feature.tags.hazard_level }'
+
+  - id: "capital_cities"
+    features:
+      - source: osm
+        geometry: point
+        min_zoom: 2
+        include_when:
+          place: city
+          capital: yes
+        attributes:
+          - key: name
+            value: '${ feature.tags.name }'
+          - key: population
+            value: '${ feature.tags.population }'

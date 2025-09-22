@@ -1,0 +1,176 @@
+{
+  "version": 8,
+  "name": "Global Seismic Alerts",
+  "metadata": {
+    "maptiler:license": "https://www.maptiler.com/license/",
+    "maptiler:source": "USGS Earthquake Hazards Program"
+  },
+  "sources": {
+    "global_seismic_alerts": {
+      "type": "vector",
+      "url": "mbtiles://{global_seismic_alerts}"
+    }
+  },
+  "glyphs": "https://fonts.tilehosting.com/{fontstack}/{range}.pbf",
+  "layers": [
+    {
+      "id": "background",
+      "type": "background",
+      "paint": {
+        "background-color": "#45516e"
+      }
+    },
+    {
+      "id": "land",
+      "type": "fill",
+      "source": "global_seismic_alerts",
+      "source-layer": "land",
+      "paint": {
+        "fill-color": "#45516e"
+      }
+    },
+    {
+      "id": "ocean",
+      "type": "fill",
+      "source": "global_seismic_alerts",
+      "source-layer": "ocean",
+      "paint": {
+        "fill-color": "#002e42"
+      }
+    },
+    {
+      "id": "tectonic_boundaries_glow",
+      "type": "line",
+      "source": "global_seismic_alerts",
+      "source-layer": "tectonic_boundaries",
+      "minzoom": 0,
+      "layout": {
+        "line-join": "round"
+      },
+      "paint": {
+        "line-color": "#f3f0ff",
+        "line-width": 4,
+        "line-opacity": 0.15
+      }
+    },
+    {
+      "id": "tectonic_boundaries",
+      "type": "line",
+      "source": "global_seismic_alerts",
+      "source-layer": "tectonic_boundaries",
+      "minzoom": 0,
+      "layout": {
+        "line-join": "round"
+      },
+      "paint": {
+        "line-color": "#f1b8ff",
+        "line-width": 1.2,
+        "line-opacity": 0.6
+      }
+    },
+    {
+      "id": "earthquake_glow",
+      "type": "circle",
+      "source": "global_seismic_alerts",
+      "source-layer": "earthquake_glow",
+      "minzoom": 0,
+      "paint": {
+        "circle-color": [
+          "match",
+          ["get", "hazard_level"],
+          "extreme", "#ff3b2f",
+          "severe", "#ff6f3c",
+          "high", "#ff9f1c",
+          "elevated", "#ffd23f",
+          "watch", "#89d8ff",
+          "monitor", "#cbd5f5",
+          "#ffd23f"
+        ],
+        "circle-radius": [
+          "interpolate",
+          ["linear"],
+          ["get", "mag"],
+          4.5, 6,
+          5.5, 12,
+          6.5, 18,
+          7.5, 28
+        ],
+        "circle-opacity": 0.25
+      }
+    },
+    {
+      "id": "earthquakes",
+      "type": "circle",
+      "source": "global_seismic_alerts",
+      "source-layer": "earthquakes",
+      "minzoom": 0,
+      "paint": {
+        "circle-color": [
+          "match",
+          ["get", "hazard_level"],
+          "extreme", "#ff3b2f",
+          "severe", "#ff6f3c",
+          "high", "#ff9f1c",
+          "elevated", "#ffd23f",
+          "watch", "#5cc0ff",
+          "monitor", "#b0becd",
+          "#ffd23f"
+        ],
+        "circle-radius": [
+          "interpolate",
+          ["linear"],
+          ["get", "mag"],
+          4.5, 3.4,
+          5.5, 6.5,
+          6.5, 9.5,
+          7.5, 14
+        ],
+        "circle-stroke-color": "#1f2637",
+        "circle-stroke-width": 0.8,
+        "circle-opacity": 0.9
+      }
+    },
+    {
+      "id": "earthquake_labels",
+      "type": "symbol",
+      "source": "global_seismic_alerts",
+      "source-layer": "earthquake_labels",
+      "minzoom": 2,
+      "layout": {
+        "text-field": "M{mag} · {hazard_level}",
+        "text-font": ["Noto Sans Bold"],
+        "text-size": 11,
+        "text-offset": [0, 1.2],
+        "text-anchor": "top"
+      },
+      "paint": {
+        "text-color": "#fff2c7",
+        "text-halo-color": "#242c3d",
+        "text-halo-width": 1.3
+      }
+    },
+    {
+      "id": "capital_cities",
+      "type": "symbol",
+      "source": "global_seismic_alerts",
+      "source-layer": "capital_cities",
+      "minzoom": 2,
+      "layout": {
+        "icon-image": "circle-11",
+        "icon-size": 0.7,
+        "text-field": "{name}",
+        "text-font": ["Noto Sans Regular"],
+        "text-size": 10,
+        "text-offset": [0, 1.1],
+        "text-anchor": "top"
+      },
+      "paint": {
+        "icon-color": "#dff2ff",
+        "icon-opacity": 0.9,
+        "text-color": "#dff2ff",
+        "text-halo-color": "#1a2030",
+        "text-halo-width": 1
+      }
+    }
+  ]
+}

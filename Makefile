@@ -111,6 +111,23 @@ peacekeeping_network:
 	@echo "1. Copy the style file: cp theme/peacekeeping_network/style.json data/peacekeeping_network.json"
 	@echo "2. Update data/config.json to include the new theme."
 
+.PHONY: global_seismic_alerts
+global_seismic_alerts:
+	@echo "Preparing data for theme: global_seismic_alerts..."
+	@mkdir -p tmp
+	@python theme/global_seismic_alerts/build_geojson.py
+	@echo "Generating theme: global_seismic_alerts..."
+	@cp "theme/global_seismic_alerts/schema.yml" "data/global_seismic_alerts.yml"
+	$(DOCKER_RUN) generate-custom \
+		--schema=/data/global_seismic_alerts.yml \
+		--output=/data/global_seismic_alerts.mbtiles \
+		--download \
+		--force
+	@echo "Theme global_seismic_alerts generated successfully."
+	@echo "Next steps:"
+	@echo "1. Copy the style file: cp theme/global_seismic_alerts/style.json data/global_seismic_alerts.json"
+	@echo "2. Update data/config.json to include the new theme."
+
 .PHONY: custom
 custom:
 	docker run \
