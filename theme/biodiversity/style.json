@@ -24,7 +24,7 @@
       "source": "biodiversity",
       "source-layer": "ocean",
       "paint": {
-        "fill-color": "#a6cee3"
+        "fill-color": "#002e42"
       }
     },
     {
@@ -45,11 +45,18 @@
         "fill-color": "#33a02c",
         "fill-opacity": [
           "interpolate",
-          ["linear"],
-          ["zoom"],
-          0, 0.3,
-          6, 0.4,
-          10, 0.5
+          [
+            "linear"
+          ],
+          [
+            "zoom"
+          ],
+          0,
+          0.3,
+          6,
+          0.4,
+          10,
+          0.5
         ]
       }
     },

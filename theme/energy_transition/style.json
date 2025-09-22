@@ -26,7 +26,7 @@
       "source": "energy_transition",
       "source-layer": "ocean",
       "paint": {
-        "fill-color": "#131826"
+        "fill-color": "#002e42"
       }
     },
     {
@@ -63,7 +63,11 @@
       "type": "fill",
       "source": "energy_transition",
       "source-layer": "extraction_sites",
-      "filter": ["==", "$type", "Polygon"],
+      "filter": [
+        "==",
+        "$type",
+        "Polygon"
+      ],
       "paint": {
         "fill-color": "#ff4500",
         "fill-opacity": 0.4
@@ -74,7 +78,11 @@
       "type": "circle",
       "source": "energy_transition",
       "source-layer": "extraction_sites",
-      "filter": ["==", "$type", "Point"],
+      "filter": [
+        "==",
+        "$type",
+        "Point"
+      ],
       "paint": {
         "circle-radius": 2,
         "circle-color": "#ff4500",
@@ -98,7 +106,11 @@
       "type": "circle",
       "source": "energy_transition",
       "source-layer": "renewable_plant",
-      "filter": ["==", "source", "wind"],
+      "filter": [
+        "==",
+        "source",
+        "wind"
+      ],
       "paint": {
         "circle-radius": 3,
         "circle-color": "#00ffff"
@@ -109,7 +121,11 @@
       "type": "circle",
       "source": "energy_transition",
       "source-layer": "renewable_plant",
-      "filter": ["==", "source", "solar"],
+      "filter": [
+        "==",
+        "source",
+        "solar"
+      ],
       "paint": {
         "circle-radius": 3,
         "circle-color": "#ffff00"
@@ -120,7 +136,11 @@
       "type": "circle",
       "source": "energy_transition",
       "source-layer": "renewable_plant",
-      "filter": ["==", "source", "hydro"],
+      "filter": [
+        "==",
+        "source",
+        "hydro"
+      ],
       "paint": {
         "circle-radius": 3,
         "circle-color": "#4169e1"

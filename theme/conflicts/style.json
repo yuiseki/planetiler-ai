@@ -21,7 +21,7 @@
       "source": "conflicts",
       "source-layer": "ocean",
       "paint": {
-        "fill-color": "#d4e9f7"
+        "fill-color": "#002e42"
       }
     },
     {
@@ -50,7 +50,10 @@
       "paint": {
         "circle-radius": [
           "step",
-          ["get", "best"],
+          [
+            "get",
+            "best"
+          ],
           2,
           10,
           4,
@@ -61,7 +64,10 @@
         ],
         "circle-color": [
           "step",
-          ["get", "best"],
+          [
+            "get",
+            "best"
+          ],
           "#ffcc00",
           10,
           "#ff9900",

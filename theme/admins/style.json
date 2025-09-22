@@ -22,7 +22,7 @@
       "source-layer": "ocean",
       "type": "fill",
       "paint": {
-        "fill-color": "#d4e6f1"
+        "fill-color": "#002e42"
       }
     },
     {
@@ -30,7 +30,11 @@
       "type": "line",
       "source": "admins",
       "source-layer": "boundaries",
-      "filter": ["==", "admin_level", 2],
+      "filter": [
+        "==",
+        "admin_level",
+        2
+      ],
       "layout": {
         "line-cap": "round",
         "line-join": "round"
@@ -40,9 +44,18 @@
         "line-width": {
           "base": 1,
           "stops": [
-            [0, 0.5],
-            [4, 1],
-            [10, 2]
+            [
+              0,
+              0.5
+            ],
+            [
+              4,
+              1
+            ],
+            [
+              10,
+              2
+            ]
           ]
         }
       }
@@ -53,19 +66,32 @@
       "source": "admins",
       "source-layer": "boundaries",
       "minzoom": 4,
-      "filter": ["==", "admin_level", 4],
+      "filter": [
+        "==",
+        "admin_level",
+        4
+      ],
       "layout": {
         "line-cap": "round",
         "line-join": "round"
       },
       "paint": {
         "line-color": "#c0c0c0",
-        "line-dasharray": [2, 2],
+        "line-dasharray": [
+          2,
+          2
+        ],
         "line-width": {
           "base": 1,
           "stops": [
-            [4, 0.5],
-            [10, 1.5]
+            [
+              4,
+              0.5
+            ],
+            [
+              10,
+              1.5
+            ]
           ]
         }
       }
@@ -77,12 +103,22 @@
       "source-layer": "boundary_labels",
       "minzoom": 0,
       "maxzoom": 2,
-      "filter": [ "all",
-        ["==", "admin_level", 2]
+      "filter": [
+        "all",
+        [
+          "==",
+          "admin_level",
+          2
+        ]
       ],
       "layout": {
-        "text-field": ["get", "name"],
-        "text-font": ["Open Sans Bold"],
+        "text-field": [
+          "get",
+          "name"
+        ],
+        "text-font": [
+          "Open Sans Bold"
+        ],
         "text-size": 8,
         "text-transform": "uppercase",
         "text-optional": true
@@ -100,13 +136,27 @@
       "source-layer": "boundary_labels",
       "minzoom": 2,
       "maxzoom": 4,
-      "filter": [ "all",
-        ["==", "admin_level", 2],
-        [">=", "way_area", 70000000]
+      "filter": [
+        "all",
+        [
+          "==",
+          "admin_level",
+          2
+        ],
+        [
+          ">=",
+          "way_area",
+          70000000
+        ]
       ],
       "layout": {
-        "text-field": ["get", "name"],
-        "text-font": ["Open Sans Bold"],
+        "text-field": [
+          "get",
+          "name"
+        ],
+        "text-font": [
+          "Open Sans Bold"
+        ],
         "text-size": 10,
         "text-transform": "uppercase",
         "text-optional": true
@@ -123,10 +173,19 @@
       "source": "admins",
       "source-layer": "boundary_labels",
       "minzoom": 4,
-      "filter": ["==", "admin_level", 2],
+      "filter": [
+        "==",
+        "admin_level",
+        2
+      ],
       "layout": {
-        "text-field": ["get", "name"],
-        "text-font": ["Open Sans Bold"],
+        "text-field": [
+          "get",
+          "name"
+        ],
+        "text-font": [
+          "Open Sans Bold"
+        ],
         "text-size": 12,
         "text-transform": "uppercase",
         "text-optional": true
@@ -143,14 +202,29 @@
       "source": "admins",
       "source-layer": "boundary_labels",
       "minzoom": 4,
-      "filter": ["==", "admin_level", 4],
+      "filter": [
+        "==",
+        "admin_level",
+        4
+      ],
       "layout": {
-        "text-field": ["get", "name"],
-        "text-font": ["Open Sans Regular"],
+        "text-field": [
+          "get",
+          "name"
+        ],
+        "text-font": [
+          "Open Sans Regular"
+        ],
         "text-size": {
           "stops": [
-            [4, 8],
-            [8, 12]
+            [
+              4,
+              8
+            ],
+            [
+              8,
+              12
+            ]
           ]
         },
         "text-optional": true

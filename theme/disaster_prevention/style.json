@@ -35,7 +35,7 @@
       "source": "disaster_prevention",
       "source-layer": "ocean",
       "paint": {
-        "fill-color": "#d1e0e0"
+        "fill-color": "#002e42"
       }
     },
     {
@@ -61,7 +61,10 @@
       "paint": {
         "line-color": "#e60000",
         "line-width": 1.5,
-        "line-dasharray": [2, 1]
+        "line-dasharray": [
+          2,
+          1
+        ]
       }
     },
     {
@@ -72,10 +75,15 @@
       "layout": {
         "icon-image": "circle-15",
         "text-field": "{name}",
-        "text-font": ["Noto Sans Regular"],
+        "text-font": [
+          "Noto Sans Regular"
+        ],
         "text-size": 12,
         "text-anchor": "top",
-        "text-offset": [0, 0.8]
+        "text-offset": [
+          0,
+          0.8
+        ]
       },
       "paint": {
         "icon-color": "#008000",
@@ -92,10 +100,15 @@
       "layout": {
         "icon-image": "circle-15",
         "text-field": "{name}",
-        "text-font": ["Noto Sans Regular"],
+        "text-font": [
+          "Noto Sans Regular"
+        ],
         "text-size": 12,
         "text-anchor": "top",
-        "text-offset": [0, 0.8]
+        "text-offset": [
+          0,
+          0.8
+        ]
       },
       "paint": {
         "icon-color": "#ff0000",
@@ -112,10 +125,15 @@
       "layout": {
         "icon-image": "circle-15",
         "text-field": "{name}",
-        "text-font": ["Noto Sans Regular"],
+        "text-font": [
+          "Noto Sans Regular"
+        ],
         "text-size": 12,
         "text-anchor": "top",
-        "text-offset": [0, 0.8]
+        "text-offset": [
+          0,
+          0.8
+        ]
       },
       "paint": {
         "icon-color": "#0000ff",
@@ -132,10 +150,15 @@
       "layout": {
         "icon-image": "circle-11",
         "text-field": "{name}",
-        "text-font": ["Noto Sans Regular"],
+        "text-font": [
+          "Noto Sans Regular"
+        ],
         "text-size": 10,
         "text-anchor": "top",
-        "text-offset": [0, 0.8]
+        "text-offset": [
+          0,
+          0.8
+        ]
       },
       "paint": {
         "icon-color": "#4682b4",
@@ -152,10 +175,15 @@
       "layout": {
         "icon-image": "circle-11",
         "text-field": "{name}",
-        "text-font": ["Noto Sans Regular"],
+        "text-font": [
+          "Noto Sans Regular"
+        ],
         "text-size": 10,
         "text-anchor": "top",
-        "text-offset": [0, 0.8]
+        "text-offset": [
+          0,
+          0.8
+        ]
       },
       "paint": {
         "icon-color": "#800080",

@@ -23,7 +23,7 @@
       "source": "healthcare",
       "source-layer": "ocean",
       "paint": {
-        "fill-color": "#1d2c34"
+        "fill-color": "#002e42"
       }
     },
     {
@@ -61,7 +61,11 @@
       "type": "fill",
       "source": "healthcare",
       "source-layer": "healthcare",
-      "filter": ["==", "$type", "Polygon"],
+      "filter": [
+        "==",
+        "$type",
+        "Polygon"
+      ],
       "minzoom": 12,
       "paint": {
         "fill-color": "#e45a5a",
@@ -73,40 +77,151 @@
       "type": "circle",
       "source": "healthcare",
       "source-layer": "healthcare",
-      "filter": ["==", "$type", "Point"],
+      "filter": [
+        "==",
+        "$type",
+        "Point"
+      ],
       "minzoom": 4,
       "paint": {
         "circle-color": [
           "match",
-          ["get", "class"],
-          "hospital", "#e45a5a",
-          "clinic", "#f0a253",
-          "pharmacy", "#5abf82",
-          "dentist", "#8d6ac4",
+          [
+            "get",
+            "class"
+          ],
+          "hospital",
+          "#e45a5a",
+          "clinic",
+          "#f0a253",
+          "pharmacy",
+          "#5abf82",
+          "dentist",
+          "#8d6ac4",
           "#cccccc"
         ],
         "circle-radius": [
-          "interpolate", ["linear"], ["zoom"],
-          4, ["case", ["==", ["get", "class"], "hospital"], 2, 0],
-          8, ["case", ["==", ["get", "class"], "hospital"], 4, 2],
-          12, ["case", ["==", ["get", "class"], "hospital"], 8, ["==", ["get", "class"], "clinic"], 6, 4],
-          16, ["case", ["==", ["get", "class"], "hospital"], 12, ["==", ["get", "class"], "clinic"], 10, 6]
+          "interpolate",
+          [
+            "linear"
+          ],
+          [
+            "zoom"
+          ],
+          4,
+          [
+            "case",
+            [
+              "==",
+              [
+                "get",
+                "class"
+              ],
+              "hospital"
+            ],
+            2,
+            0
+          ],
+          8,
+          [
+            "case",
+            [
+              "==",
+              [
+                "get",
+                "class"
+              ],
+              "hospital"
+            ],
+            4,
+            2
+          ],
+          12,
+          [
+            "case",
+            [
+              "==",
+              [
+                "get",
+                "class"
+              ],
+              "hospital"
+            ],
+            8,
+            [
+              "==",
+              [
+                "get",
+                "class"
+              ],
+              "clinic"
+            ],
+            6,
+            4
+          ],
+          16,
+          [
+            "case",
+            [
+              "==",
+              [
+                "get",
+                "class"
+              ],
+              "hospital"
+            ],
+            12,
+            [
+              "==",
+              [
+                "get",
+                "class"
+              ],
+              "clinic"
+            ],
+            10,
+            6
+          ]
         ],
         "circle-stroke-width": [
           "case",
-          ["==", ["get", "emergency"], true], 2.5,
+          [
+            "==",
+            [
+              "get",
+              "emergency"
+            ],
+            true
+          ],
+          2.5,
           1
         ],
         "circle-stroke-color": "#ffffff",
         "circle-opacity": [
-          "interpolate", ["linear"], ["zoom"],
-          4, 0.8,
-          8, 0.9
+          "interpolate",
+          [
+            "linear"
+          ],
+          [
+            "zoom"
+          ],
+          4,
+          0.8,
+          8,
+          0.9
         ],
         "circle-stroke-opacity": [
-          "interpolate", ["linear"], ["zoom"],
-          4, 0.8,
-          8, 1
+          "interpolate",
+          [
+            "linear"
+          ],
+          [
+            "zoom"
+          ],
+          4,
+          0.8,
+          8,
+          1
         ]
       }
     },
@@ -117,19 +232,79 @@
       "source-layer": "healthcare",
       "minzoom": 12,
       "layout": {
-        "text-field": ["get", "name"],
-        "text-font": ["Open Sans Semibold", "Arial Unicode MS Bold"],
+        "text-field": [
+          "get",
+          "name"
+        ],
+        "text-font": [
+          "Open Sans Semibold",
+          "Arial Unicode MS Bold"
+        ],
         "text-size": 10,
-        "text-offset": [0, 1.5],
+        "text-offset": [
+          0,
+          1.5
+        ],
         "text-anchor": "top",
         "text-optional": true,
         "icon-image": [
           "case",
-          ["all", ["==", ["get", "class"], "hospital"], ["==", ["get", "emergency"], true]], "hospital-emergency-24",
-          ["==", ["get", "class"], "hospital"], "hospital-24",
-          ["==", ["get", "class"], "clinic"], "clinic-18",
-          ["==", ["get", "class"], "pharmacy"], "pharmacy-18",
-          ["==", ["get", "class"], "dentist"], "dentist-18",
+          [
+            "all",
+            [
+              "==",
+              [
+                "get",
+                "class"
+              ],
+              "hospital"
+            ],
+            [
+              "==",
+              [
+                "get",
+                "emergency"
+              ],
+              true
+            ]
+          ],
+          "hospital-emergency-24",
+          [
+            "==",
+            [
+              "get",
+              "class"
+            ],
+            "hospital"
+          ],
+          "hospital-24",
+          [
+            "==",
+            [
+              "get",
+              "class"
+            ],
+            "clinic"
+          ],
+          "clinic-18",
+          [
+            "==",
+            [
+              "get",
+              "class"
+            ],
+            "pharmacy"
+          ],
+          "pharmacy-18",
+          [
+            "==",
+            [
+              "get",
+              "class"
+            ],
+            "dentist"
+          ],
+          "dentist-18",
           "dot-10"
         ],
         "icon-allow-overlap": false,

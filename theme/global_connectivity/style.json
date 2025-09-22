@@ -35,7 +35,7 @@
       "source": "global_connectivity",
       "source-layer": "ocean",
       "paint": {
-        "fill-color": "#0c1021"
+        "fill-color": "#002e42"
       }
     },
     {
@@ -81,8 +81,12 @@
         "circle-color": "#3399ff",
         "circle-radius": [
           "interpolate",
-          ["linear"],
-          ["zoom"],
+          [
+            "linear"
+          ],
+          [
+            "zoom"
+          ],
           0,
           1.5,
           4,
@@ -102,8 +106,12 @@
         "circle-color": "#ffcc00",
         "circle-radius": [
           "interpolate",
-          ["linear"],
-          ["zoom"],
+          [
+            "linear"
+          ],
+          [
+            "zoom"
+          ],
           0,
           1.5,
           4,
@@ -121,10 +129,15 @@
       "layout": {
         "icon-image": "harbor-15",
         "text-field": "{name}",
-        "text-font": ["Noto Sans Regular"],
+        "text-font": [
+          "Noto Sans Regular"
+        ],
         "text-size": 10,
         "text-anchor": "top",
-        "text-offset": [0, 0.8]
+        "text-offset": [
+          0,
+          0.8
+        ]
       },
       "paint": {
         "text-color": "#a6c5e6",
@@ -141,10 +154,15 @@
       "layout": {
         "icon-image": "airport-15",
         "text-field": "{name}",
-        "text-font": ["Noto Sans Regular"],
+        "text-font": [
+          "Noto Sans Regular"
+        ],
         "text-size": 10,
         "text-anchor": "top",
-        "text-offset": [0, 0.8]
+        "text-offset": [
+          0,
+          0.8
+        ]
       },
       "paint": {
         "text-color": "#a6c5e6",

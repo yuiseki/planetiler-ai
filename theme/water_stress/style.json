@@ -23,7 +23,7 @@
       "source": "water_stress",
       "source-layer": "ocean",
       "paint": {
-        "fill-color": "#d4e9f7"
+        "fill-color": "#002e42"
       }
     },
     {
@@ -44,13 +44,21 @@
       "paint": {
         "fill-color": [
           "step",
-          ["get", "water_risk"],
+          [
+            "get",
+            "water_risk"
+          ],
           "#cccccc",
-          0, "#ffffd4",
-          1, "#fed98e",
-          2, "#fe9929",
-          3, "#d95f0e",
-          4, "#993404"
+          0,
+          "#ffffd4",
+          1,
+          "#fed98e",
+          2,
+          "#fe9929",
+          3,
+          "#d95f0e",
+          4,
+          "#993404"
         ],
         "fill-opacity": 0.8
       }
