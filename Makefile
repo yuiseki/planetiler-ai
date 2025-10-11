@@ -198,8 +198,8 @@ water:
 				--output=/data/water.mbtiles \
 				--force
 
-.PHONY: world
-world:
+.PHONY: planet
+planet:
 	docker run \
 		-u `id -u`:`id -g` \
 		--memory 90g \
@@ -217,5 +217,5 @@ world:
 			--nodemap-type=sparsearray \
 			--nodemap-storage=mmap \
 			--osm-path=/data/planet-latest.osm.pbf \
-			--output=/data/output-new.mbtiles \
+			--output=/data/planet-new.mbtiles \
 			--force
