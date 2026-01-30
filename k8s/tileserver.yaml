@@ -1,0 +1,41 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: tileserver
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: tileserver
+  template:
+    metadata:
+      labels:
+        app: tileserver
+    spec:
+      containers:
+        - name: tileserver
+          image: maptiler/tileserver-gl:latest
+          ports:
+            - containerPort: 8080
+              hostPort: 8000
+          volumeMounts:
+            - name: tileserver-data
+              mountPath: /data
+      volumes:
+        - name: tileserver-data
+          hostPath:
+            path: /everything/src/github.com/yuiseki/planetiler-ai/data
+            type: Directory
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: tileserver
+spec:
+  selector:
+    app: tileserver
+  ports:
+    - name: http
+      port: 8080
+      targetPort: 8080
+  type: ClusterIP
