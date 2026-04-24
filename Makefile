@@ -242,3 +242,84 @@ planet-mlt:
 			--tile-format=mlt \
 			--output=/data/planet-mlt.mbtiles \
 			--force
+
+.PHONY: planet-profile
+planet-profile:
+	docker run \
+		-u `id -u`:`id -g` \
+		--memory 90g \
+		--memory-swap 90g \
+		--memory-swappiness 10 \
+		-e JAVA_TOOL_OPTIONS="-XX:+AlwaysPreTouch -Xms28g -Xmx28g -XX:StartFlightRecording=filename=/data/planet.jfr,duration=5h,settings=profile,disk=true,dumponexit=true,maxsize=5g" \
+		-v "$(pwd)/data":/data \
+		ghcr.io/onthegomap/planetiler:latest \
+			--area=planet \
+			--bounds=planet \
+			--download \
+			--download-threads=16 \
+			--download-chunk-size-mb=1000 \
+			--fetch-wikidata \
+			--nodemap-type=sparsearray \
+			--nodemap-storage=mmap \
+			--osm-path=/data/planet-latest.osm.pbf \
+			--output=/data/planet-new.mbtiles \
+			--force
+
+# ==========================================================
+# Theme-specific pre-filter experiment (railways)
+#   Goal: compare "full planet.pbf" vs "osmium tags-filter'd mini-pbf"
+#   as input to Planetiler, for rapid theme iteration.
+# ==========================================================
+
+# osmium tags-filter output. Rebuilt only when planet-latest.osm.pbf is newer.
+data/planet-railways.osm.pbf: data/planet-latest.osm.pbf
+	@echo "=== osmium tags-filter (railways) start: $$(date -Iseconds) ==="
+	time osmium tags-filter \
+		data/planet-latest.osm.pbf \
+		nwr/railway \
+		-o data/planet-railways.osm.pbf \
+		--overwrite --progress --verbose
+	@echo "=== osmium tags-filter (railways) end: $$(date -Iseconds) ==="
+	@ls -lh data/planet-railways.osm.pbf
+
+# Standalone trigger: just do the osmium filter and stop.
+# Use this FIRST to sanity-check osmium speed before committing to the full comparison.
+.PHONY: planet-railways-pbf
+planet-railways-pbf: data/planet-railways.osm.pbf
+
+# Full planet.pbf input + JFR profiling (slow baseline).
+.PHONY: railways-profile
+railways-profile:
+	@echo "=== railways-profile (full planet.pbf + JFR) start: $$(date -Iseconds) ==="
+	@cp theme/railways/schema.yml data/railways.yml
+	time docker run \
+		-u `id -u`:`id -g` \
+		--memory 30g --memory-swap -1 \
+		-e JAVA_TOOL_OPTIONS="-Xms16g -Xmx16g -XX:StartFlightRecording=filename=/data/railways.jfr,duration=6h,settings=profile,disk=true,dumponexit=true,maxsize=5g" \
+		-v "$(pwd)/data":/data \
+		-v "/everything/osm/planet":/osm_planet:ro \
+		ghcr.io/onthegomap/planetiler:latest \
+			generate-custom \
+				--schema=/data/railways.yml \
+				--output=/data/railways-profile.mbtiles \
+				--force
+	@echo "=== railways-profile end: $$(date -Iseconds) ==="
+
+# osmium-filtered mini-pbf input + JFR profiling (fast expected).
+.PHONY: railways-pre-filter-profile
+railways-pre-filter-profile: data/planet-railways.osm.pbf
+	@echo "=== railways-pre-filter-profile (osmium-filtered + JFR) start: $$(date -Iseconds) ==="
+	@cp theme/railways/schema.yml data/railways-pre-filter.yml
+	@sed -i 's|/data/planet-latest.osm.pbf|/data/planet-railways.osm.pbf|' data/railways-pre-filter.yml
+	time docker run \
+		-u `id -u`:`id -g` \
+		--memory 30g --memory-swap -1 \
+		-e JAVA_TOOL_OPTIONS="-Xms16g -Xmx16g -XX:StartFlightRecording=filename=/data/railways-pre-filter.jfr,duration=6h,settings=profile,disk=true,dumponexit=true,maxsize=5g" \
+		-v "$(pwd)/data":/data \
+		-v "/everything/osm/planet":/osm_planet:ro \
+		ghcr.io/onthegomap/planetiler:latest \
+			generate-custom \
+				--schema=/data/railways-pre-filter.yml \
+				--output=/data/railways-pre-filter.mbtiles \
+				--force
+	@echo "=== railways-pre-filter-profile end: $$(date -Iseconds) ==="
