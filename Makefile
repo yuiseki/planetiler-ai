@@ -9,7 +9,9 @@ MEMORY_OPTIONS = $(MEMORY_OPTIONS_32G)
 JAVA_TOOL_OPTIONS_LEGACY = -Xms8g -Xmx8g
 JAVA_TOOL_OPTIONS_G1_32G = -Xms32g -Xmx32g
 JAVA_TOOL_OPTIONS_ZGC_32G = -XX:+UseZGC -Xms32g -Xmx32g
+JAVA_TOOL_OPTIONS_ZGC_32G_TUNED = -XX:+UseZGC -XX:ZCollectionInterval=0.5 -XX:ZUncommitDelay=0 -Xms32g -Xmx32g
 JAVA_TOOL_OPTIONS = $(JAVA_TOOL_OPTIONS_ZGC_32G)
+DEFAULT_TILE_ARCHIVE_EXT = pmtiles
 
 pwd = $(shell pwd)
 DOCKER_IMAGE = ghcr.io/onthegomap/planetiler:latest
@@ -25,11 +27,20 @@ docker run \
     $(DOCKER_IMAGE)
 endef
 
+define theme_output_path
+/data/$(1).$(DEFAULT_TILE_ARCHIVE_EXT)
+endef
+
+define theme_prefilter_output_path
+/data/$(1)-pre-filter.$(DEFAULT_TILE_ARCHIVE_EXT)
+endef
+
 DOCKER_RUN = $(call docker_run_with_java,$(MEMORY_OPTIONS),$(JAVA_TOOL_OPTIONS))
 DOCKER_RUN_LEGACY = $(call docker_run_with_java,$(MEMORY_OPTIONS_LEGACY),$(JAVA_TOOL_OPTIONS_LEGACY))
 DOCKER_RUN_G1_32G = $(call docker_run_with_java,$(MEMORY_OPTIONS_32G),$(JAVA_TOOL_OPTIONS_G1_32G))
 DOCKER_RUN_ZGC_32G = $(call docker_run_with_java,$(MEMORY_OPTIONS_32G),$(JAVA_TOOL_OPTIONS_ZGC_32G))
 DOCKER_RUN_ZGC_32G_CONTAINER_64G = $(call docker_run_with_java,$(MEMORY_OPTIONS_64G),$(JAVA_TOOL_OPTIONS_ZGC_32G))
+DOCKER_RUN_ZGC_32G_TUNED_CONTAINER_64G = $(call docker_run_with_java,$(MEMORY_OPTIONS_64G),$(JAVA_TOOL_OPTIONS_ZGC_32G_TUNED))
 
 FULL_PLANET_PBF = data/planet-latest.osm.pbf
 JAPAN_OSM_URL = https://download.geofabrik.de/asia/japan-latest.osm.pbf
@@ -73,7 +84,7 @@ $(1):
 	@cp "theme/$(1)/schema.yml" "data/$(1).yml"
 	$(DOCKER_RUN) generate-custom \
 		--schema=/data/$(1).yml \
-		--output=/data/$(1).mbtiles \
+		--output=$(call theme_output_path,$(1)) \
 		--download \
 		--force
 	@echo "Theme $(1) generated successfully."
@@ -104,7 +115,7 @@ $(1)-pre-filter: data/planet-$(1).osm.pbf
 	@sed -i 's|$(PREFILTER_SCHEMA_MATCH_$(1))|$(PREFILTER_SCHEMA_REPLACE_$(1))|' "data/$(1)-pre-filter.yml"
 	$(PREFILTER_DOCKER_RUN_$(1)) generate-custom \
 		--schema=/data/$(1)-pre-filter.yml \
-		--output=/data/$(1)-pre-filter.mbtiles \
+		--output=$(call theme_prefilter_output_path,$(1)) \
 		$(PREFILTER_GENERATE_FLAGS_$(1)) \
 		--force
 	@echo "=== $(1)-pre-filter end: $$$$(date -Iseconds) ==="
@@ -200,6 +211,60 @@ $(1)-pre-filter-zgc-32g-container-64g: data/planet-$(1).osm.pbf | $(BENCHMARK_DI
 $(1)-pre-filter-gc-compare: $(1)-pre-filter-g1-32g $(1)-pre-filter-zgc-32g
 endef
 
+.PHONY: railways-pre-filter-pmtiles-zgc-64g
+railways-pre-filter-pmtiles-zgc-64g: data/planet-railways.osm.pbf | $(BENCHMARK_DIR)
+	@echo "=== railways pre-filter PMTiles ZGC 32g / 64g benchmark start: $$(date -Iseconds) ==="
+	@cp "theme/railways/schema.yml" "data/railways-pre-filter-pmtiles-zgc-64g.yml"
+	@sed -i 's|/data/planet-latest.osm.pbf|/data/planet-railways.osm.pbf|' "data/railways-pre-filter-pmtiles-zgc-64g.yml"
+	@rm -f "$(BENCHMARK_DIR)/railways-pre-filter-pmtiles-zgc-64g.pmtiles" "$(BENCHMARK_DIR)/railways-pre-filter-pmtiles-zgc-64g.time.txt" "$(BENCHMARK_DIR)/railways-pre-filter-pmtiles-zgc-64g.jfr"
+	/usr/bin/time -v -o "$(BENCHMARK_DIR)/railways-pre-filter-pmtiles-zgc-64g.time.txt" \
+		docker run -u `id -u`:`id -g` --memory 64g --memory-swap -1 \
+			-e JAVA_TOOL_OPTIONS='$(JAVA_TOOL_OPTIONS_ZGC_32G) -XX:StartFlightRecording=filename=/data/benchmarks/railways-pre-filter-pmtiles-zgc-64g.jfr,settings=profile,dumponexit=true' \
+			-v "$(pwd)/data":/data \
+			-v "/everything/osm/planet":/osm_planet:ro \
+			$(DOCKER_IMAGE) generate-custom \
+				--schema=/data/railways-pre-filter-pmtiles-zgc-64g.yml \
+				--output=/data/benchmarks/railways-pre-filter-pmtiles-zgc-64g.pmtiles \
+				--force
+	@ls -lh "$(BENCHMARK_DIR)/railways-pre-filter-pmtiles-zgc-64g.pmtiles" "$(BENCHMARK_DIR)/railways-pre-filter-pmtiles-zgc-64g.jfr"
+	@echo "=== railways pre-filter PMTiles ZGC 32g / 64g benchmark end: $$(date -Iseconds) ==="
+
+.PHONY: railways-pre-filter-zgc-tuned-64g
+railways-pre-filter-zgc-tuned-64g: data/planet-railways.osm.pbf | $(BENCHMARK_DIR)
+	@echo "=== railways pre-filter tuned ZGC 32g / 64g benchmark start: $$(date -Iseconds) ==="
+	@cp "theme/railways/schema.yml" "data/railways-pre-filter-zgc-tuned-64g.yml"
+	@sed -i 's|/data/planet-latest.osm.pbf|/data/planet-railways.osm.pbf|' "data/railways-pre-filter-zgc-tuned-64g.yml"
+	@rm -f "$(BENCHMARK_DIR)/railways-pre-filter-zgc-tuned-64g.mbtiles" "$(BENCHMARK_DIR)/railways-pre-filter-zgc-tuned-64g.time.txt" "$(BENCHMARK_DIR)/railways-pre-filter-zgc-tuned-64g.jfr"
+	/usr/bin/time -v -o "$(BENCHMARK_DIR)/railways-pre-filter-zgc-tuned-64g.time.txt" \
+		docker run -u `id -u`:`id -g` --memory 64g --memory-swap -1 \
+			-e JAVA_TOOL_OPTIONS='$(JAVA_TOOL_OPTIONS_ZGC_32G_TUNED) -XX:StartFlightRecording=filename=/data/benchmarks/railways-pre-filter-zgc-tuned-64g.jfr,settings=profile,dumponexit=true' \
+			-v "$(pwd)/data":/data \
+			-v "/everything/osm/planet":/osm_planet:ro \
+			$(DOCKER_IMAGE) generate-custom \
+				--schema=/data/railways-pre-filter-zgc-tuned-64g.yml \
+				--output=/data/benchmarks/railways-pre-filter-zgc-tuned-64g.mbtiles \
+				--force
+	@ls -lh "$(BENCHMARK_DIR)/railways-pre-filter-zgc-tuned-64g.mbtiles" "$(BENCHMARK_DIR)/railways-pre-filter-zgc-tuned-64g.jfr"
+	@echo "=== railways pre-filter tuned ZGC 32g / 64g benchmark end: $$(date -Iseconds) ==="
+
+.PHONY: railways-pre-filter-pmtiles-zgc-tuned-64g
+railways-pre-filter-pmtiles-zgc-tuned-64g: data/planet-railways.osm.pbf | $(BENCHMARK_DIR)
+	@echo "=== railways pre-filter PMTiles tuned ZGC 32g / 64g benchmark start: $$(date -Iseconds) ==="
+	@cp "theme/railways/schema.yml" "data/railways-pre-filter-pmtiles-zgc-tuned-64g.yml"
+	@sed -i 's|/data/planet-latest.osm.pbf|/data/planet-railways.osm.pbf|' "data/railways-pre-filter-pmtiles-zgc-tuned-64g.yml"
+	@rm -f "$(BENCHMARK_DIR)/railways-pre-filter-pmtiles-zgc-tuned-64g.pmtiles" "$(BENCHMARK_DIR)/railways-pre-filter-pmtiles-zgc-tuned-64g.time.txt" "$(BENCHMARK_DIR)/railways-pre-filter-pmtiles-zgc-tuned-64g.jfr"
+	/usr/bin/time -v -o "$(BENCHMARK_DIR)/railways-pre-filter-pmtiles-zgc-tuned-64g.time.txt" \
+		docker run -u `id -u`:`id -g` --memory 64g --memory-swap -1 \
+			-e JAVA_TOOL_OPTIONS='$(JAVA_TOOL_OPTIONS_ZGC_32G_TUNED) -XX:StartFlightRecording=filename=/data/benchmarks/railways-pre-filter-pmtiles-zgc-tuned-64g.jfr,settings=profile,dumponexit=true' \
+			-v "$(pwd)/data":/data \
+			-v "/everything/osm/planet":/osm_planet:ro \
+			$(DOCKER_IMAGE) generate-custom \
+				--schema=/data/railways-pre-filter-pmtiles-zgc-tuned-64g.yml \
+				--output=/data/benchmarks/railways-pre-filter-pmtiles-zgc-tuned-64g.pmtiles \
+				--force
+	@ls -lh "$(BENCHMARK_DIR)/railways-pre-filter-pmtiles-zgc-tuned-64g.pmtiles" "$(BENCHMARK_DIR)/railways-pre-filter-pmtiles-zgc-tuned-64g.jfr"
+	@echo "=== railways pre-filter PMTiles tuned ZGC 32g / 64g benchmark end: $$(date -Iseconds) ==="
+
 $(BENCHMARK_DIR):
 	@mkdir -p "$@"
 
@@ -256,7 +321,7 @@ $(eval $(call generate_theme,volcanoes))
 admins:
 	$(DOCKER_RUN) generate-custom \
 		--schema=/data/admins.yml \
-		--output=/data/admins.mbtiles \
+		--output=$(call theme_output_path,admins) \
 		--force \
 		--download
 
@@ -264,7 +329,7 @@ admins:
 conflicts:
 	$(DOCKER_RUN) generate-custom \
 		--schema=/data/conflicts.yml \
-		--output=/data/conflicts.mbtiles \
+		--output=$(call theme_output_path,conflicts) \
 		--download \
 		--force
 
@@ -277,7 +342,7 @@ peacekeeping_network:
 	@cp "theme/peacekeeping_network/schema.yml" "data/peacekeeping_network.yml"
 	$(DOCKER_RUN) generate-custom \
 		--schema=/data/peacekeeping_network.yml \
-		--output=/data/peacekeeping_network.mbtiles \
+		--output=$(call theme_output_path,peacekeeping_network) \
 		--download \
 		--force
 	@echo "Theme peacekeeping_network generated successfully."
@@ -294,7 +359,7 @@ global_seismic_alerts:
 	@cp "theme/global_seismic_alerts/schema.yml" "data/global_seismic_alerts.yml"
 	$(DOCKER_RUN) generate-custom \
 		--schema=/data/global_seismic_alerts.yml \
-		--output=/data/global_seismic_alerts.mbtiles \
+		--output=$(call theme_output_path,global_seismic_alerts) \
 		--download \
 		--force
 	@echo "Theme global_seismic_alerts generated successfully."
@@ -313,7 +378,7 @@ custom:
 				--download \
 				--download-threads=16 \
 				--download-chunk-size-mb=1000 \
-				--output=/data/custom.mbtiles \
+				--output=$(call theme_output_path,custom) \
 				--force
 
 .PHONY: healthcare
@@ -326,7 +391,7 @@ healthcare:
 		ghcr.io/onthegomap/planetiler:latest \
 			generate-custom \
 			--schema=/data/healthcare.yml \
-			--output=/data/healthcare.mbtiles \
+			--output=$(call theme_output_path,healthcare) \
 			--download \
 			--force
 
@@ -341,21 +406,21 @@ monaco:
 			--area=monaco \
 			--download-threads=16 \
 			--download-chunk-size-mb=1000 \
-			--output=/data/monaco.mbtiles \
+			--output=$(call theme_output_path,monaco) \
 			--force
 
 .PHONY: railways
 railways:
 	$(DOCKER_RUN) generate-custom \
 		--schema=/data/railways.yml \
-		--output=/data/railways.mbtiles \
+		--output=$(call theme_output_path,railways) \
 		--force
 
 .PHONY: rivers
 rivers:
 	$(DOCKER_RUN) generate-custom \
 		--schema=/data/rivers.yml \
-		--output=/data/rivers.mbtiles \
+		--output=$(call theme_output_path,rivers) \
 		--force
 
 .PHONY: water
@@ -369,7 +434,7 @@ water:
 				--download \
 				--download-threads=16 \
 				--download-chunk-size-mb=1000 \
-				--output=/data/water.mbtiles \
+				--output=$(call theme_output_path,water) \
 				--force
 
 .PHONY: planet
@@ -391,7 +456,7 @@ planet:
 			--nodemap-type=sparsearray \
 			--nodemap-storage=mmap \
 			--osm-path=/data/planet-latest.osm.pbf \
-			--output=/data/planet-new.mbtiles \
+			--output=/data/planet-new.pmtiles \
 			--force
 
 .PHONY: planet-mlt
@@ -436,7 +501,7 @@ planet-profile:
 			--nodemap-type=sparsearray \
 			--nodemap-storage=mmap \
 			--osm-path=/data/planet-latest.osm.pbf \
-			--output=/data/planet-new.mbtiles \
+			--output=/data/planet-new.pmtiles \
 			--force
 
 # ==========================================================
@@ -574,7 +639,7 @@ railways-profile:
 		ghcr.io/onthegomap/planetiler:latest \
 			generate-custom \
 				--schema=/data/railways.yml \
-				--output=/data/railways-profile.mbtiles \
+				--output=/data/railways-profile.pmtiles \
 				--force
 	@echo "=== railways-profile end: $$(date -Iseconds) ==="
 
@@ -593,7 +658,7 @@ railways-pre-filter-profile: data/planet-railways.osm.pbf
 		ghcr.io/onthegomap/planetiler:latest \
 			generate-custom \
 				--schema=/data/railways-pre-filter.yml \
-				--output=/data/railways-pre-filter.mbtiles \
+				--output=/data/railways-pre-filter.pmtiles \
 				--force
 	@echo "=== railways-pre-filter-profile end: $$(date -Iseconds) ==="
 
@@ -611,7 +676,7 @@ admins-pre-filter-profile: data/planet-admins.osm.pbf
 		ghcr.io/onthegomap/planetiler:latest \
 			generate-custom \
 				--schema=/data/admins-pre-filter.yml \
-				--output=/data/admins-pre-filter.mbtiles \
+				--output=/data/admins-pre-filter.pmtiles \
 				--force
 	@echo "=== admins-pre-filter-profile end: $$(date -Iseconds) ==="
 
