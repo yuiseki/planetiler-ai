@@ -1,12 +1,8 @@
 schema_name: "Peacekeeping Network"
 schema_description: "2015年以降に展開された国連平和維持活動の主要拠点と専門部隊ネットワークを可視化します。"
-attribution: "<a href=\"https://www.openstreetmap.org/copyright\" target=\"_blank\">&copy; OpenStreetMap contributors</a> | GeoPKO v2.3 (Uppsala Universitet)"
+attribution: "GeoPKO v2.3 (Uppsala Universitet)"
 
 sources:
-  osm:
-    type: osm
-    local_path: /osm_planet/planet-latest.osm.pbf
-
   natural_earth:
     type: geopackage
     url: "https://naciscdn.org/naturalearth/packages/natural_earth_vector.gpkg.zip"

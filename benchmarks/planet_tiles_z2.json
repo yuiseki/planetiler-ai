@@ -1,0 +1,84 @@
+{
+  "extracts": [
+    {
+      "output": "tile_00.osm.pbf",
+      "description": "lon -180..-90, lat -90..-45",
+      "bbox": [-180.0, -90.0, -90.0, -45.0]
+    },
+    {
+      "output": "tile_01.osm.pbf",
+      "description": "lon -90..0, lat -90..-45",
+      "bbox": [-90.0, -90.0, 0.0, -45.0]
+    },
+    {
+      "output": "tile_02.osm.pbf",
+      "description": "lon 0..90, lat -90..-45",
+      "bbox": [0.0, -90.0, 90.0, -45.0]
+    },
+    {
+      "output": "tile_03.osm.pbf",
+      "description": "lon 90..180, lat -90..-45",
+      "bbox": [90.0, -90.0, 180.0, -45.0]
+    },
+    {
+      "output": "tile_10.osm.pbf",
+      "description": "lon -180..-90, lat -45..0",
+      "bbox": [-180.0, -45.0, -90.0, 0.0]
+    },
+    {
+      "output": "tile_11.osm.pbf",
+      "description": "lon -90..0, lat -45..0",
+      "bbox": [-90.0, -45.0, 0.0, 0.0]
+    },
+    {
+      "output": "tile_12.osm.pbf",
+      "description": "lon 0..90, lat -45..0",
+      "bbox": [0.0, -45.0, 90.0, 0.0]
+    },
+    {
+      "output": "tile_13.osm.pbf",
+      "description": "lon 90..180, lat -45..0",
+      "bbox": [90.0, -45.0, 180.0, 0.0]
+    },
+    {
+      "output": "tile_20.osm.pbf",
+      "description": "lon -180..-90, lat 0..45",
+      "bbox": [-180.0, 0.0, -90.0, 45.0]
+    },
+    {
+      "output": "tile_21.osm.pbf",
+      "description": "lon -90..0, lat 0..45",
+      "bbox": [-90.0, 0.0, 0.0, 45.0]
+    },
+    {
+      "output": "tile_22.osm.pbf",
+      "description": "lon 0..90, lat 0..45",
+      "bbox": [0.0, 0.0, 90.0, 45.0]
+    },
+    {
+      "output": "tile_23.osm.pbf",
+      "description": "lon 90..180, lat 0..45",
+      "bbox": [90.0, 0.0, 180.0, 45.0]
+    },
+    {
+      "output": "tile_30.osm.pbf",
+      "description": "lon -180..-90, lat 45..90",
+      "bbox": [-180.0, 45.0, -90.0, 90.0]
+    },
+    {
+      "output": "tile_31.osm.pbf",
+      "description": "lon -90..0, lat 45..90",
+      "bbox": [-90.0, 45.0, 0.0, 90.0]
+    },
+    {
+      "output": "tile_32.osm.pbf",
+      "description": "lon 0..90, lat 45..90",
+      "bbox": [0.0, 45.0, 90.0, 90.0]
+    },
+    {
+      "output": "tile_33.osm.pbf",
+      "description": "lon 90..180, lat 45..90",
+      "bbox": [90.0, 45.0, 180.0, 90.0]
+    }
+  ]
+}
