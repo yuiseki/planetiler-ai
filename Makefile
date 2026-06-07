@@ -15,6 +15,10 @@ DEFAULT_TILE_ARCHIVE_EXT = pmtiles
 
 pwd = $(shell pwd)
 DOCKER_IMAGE = ghcr.io/onthegomap/planetiler:latest
+OSMIUM ?= osmium
+OSMIUM_BEST = /home/yuiseki/Workspaces/repos/_yuiseki/_fork/osmium-tool/build/osmium
+OSMIUM_SYSTEM = osmium
+OSMIUM_BEST_LABEL = best
 
 # Common Docker run command
 define docker_run_with_java
@@ -96,7 +100,7 @@ endef
 define generate_theme_pre_filter
 data/planet-$(1).osm.pbf: $(PREFILTER_INPUT_$(1))
 	@echo "=== osmium tags-filter ($(1)) start: $$$$(date -Iseconds) ==="
-	time osmium tags-filter \
+	time $(OSMIUM) tags-filter \
 		$(PREFILTER_INPUT_$(1)) \
 		$(PREFILTER_FILTER_$(1)) \
 		-o data/planet-$(1).osm.pbf \
@@ -127,7 +131,7 @@ $(1)-single-bench: | $(BENCHMARK_DIR)
 	@echo "=== $(1) single-pass benchmark start: $$$$(date -Iseconds) ==="
 	@rm -f "$(BENCHMARK_DIR)/$(1)-single.osm.pbf" "$(BENCHMARK_DIR)/$(1)-single.time.txt"
 	/usr/bin/time -v -o "$(BENCHMARK_DIR)/$(1)-single.time.txt" \
-		osmium tags-filter \
+		$(OSMIUM) tags-filter \
 			$(FULL_PLANET_PBF) \
 			$(2) \
 			-o "$(BENCHMARK_DIR)/$(1)-single.osm.pbf" \
@@ -147,7 +151,7 @@ $(1)-tiled-bench: $(PLANET_TILE_DIR)/.extract-complete | $(BENCHMARK_DIR)
 		for tile in $(PLANET_TILE_DIR)/*.osm.pbf; do \
 			in="$$$$tile"; \
 			base=$$$$(basename "$$$$in"); \
-			osmium tags-filter "$$$$in" $(2) -o "$(PLANET_TILE_FILTER_DIR)/$(1)/$$$$base" --overwrite --no-progress & \
+			$(OSMIUM) tags-filter "$$$$in" $(2) -o "$(PLANET_TILE_FILTER_DIR)/$(1)/$$$$base" --overwrite --no-progress & \
 			running=$$$$((running + 1)); \
 			if [ "$$$$running" -ge "$(PLANET_TILE_PARALLELISM)" ]; then \
 				wait -n; \
@@ -156,7 +160,7 @@ $(1)-tiled-bench: $(PLANET_TILE_DIR)/.extract-complete | $(BENCHMARK_DIR)
 		done; \
 		wait'
 	/usr/bin/time -v -o "$(BENCHMARK_DIR)/$(1)-tiled-merge.time.txt" \
-		osmium merge \
+		$(OSMIUM) merge \
 			"$(PLANET_TILE_FILTER_DIR)/$(1)"/*.osm.pbf \
 			-o "$(BENCHMARK_DIR)/$(1)-tiled.osm.pbf" \
 			--overwrite --no-progress
@@ -272,7 +276,7 @@ $(PLANET_TILE_DIR)/.extract-complete: $(FULL_PLANET_PBF) $(PLANET_TILE_CONFIG)
 	@echo "=== planet z2 tile extract start: $$(date -Iseconds) ==="
 	@mkdir -p "$(PLANET_TILE_DIR)"
 	@rm -f "$(PLANET_TILE_DIR)"/*.osm.pbf "$@"
-	time osmium extract \
+	time $(OSMIUM) extract \
 		--config "$(PLANET_TILE_CONFIG)" \
 		--directory "$(PLANET_TILE_DIR)" \
 		--strategy="$(PLANET_TILE_EXTRACT_STRATEGY)" \
@@ -281,6 +285,63 @@ $(PLANET_TILE_DIR)/.extract-complete: $(FULL_PLANET_PBF) $(PLANET_TILE_CONFIG)
 	@touch "$@"
 	@find "$(PLANET_TILE_DIR)" -maxdepth 1 -name '*.osm.pbf' -printf '%f\t%s\n' | sort
 	@echo "=== planet z2 tile extract end: $$(date -Iseconds) ==="
+
+define benchmark_optimized_pipeline_with_osmium
+.PHONY: $(1)-optimized-pipeline-$(2)
+$(1)-optimized-pipeline-$(2): | $(BENCHMARK_DIR)
+	@echo "=== $(1) optimized pipeline ($(2)) start: $$$$(date -Iseconds) ==="
+	@mkdir -p "$(PLANET_TILE_COMPLETE_WAYS_DIR)" "$(PLANET_TILE_FILTER_DIR)/$(1)"
+	@rm -f "$(PLANET_TILE_COMPLETE_WAYS_DIR)"/*.osm.pbf "$(PLANET_TILE_COMPLETE_WAYS_DIR)/.extract-complete"
+	@rm -f "$(PLANET_TILE_FILTER_DIR)/$(1)"/*.osm.pbf
+	@rm -f "$(BENCHMARK_DIR)/$(1)-optimized-pipeline-$(2).pmtiles" \
+		"$(BENCHMARK_DIR)/$(1)-optimized-pipeline-$(2).jfr" \
+		"$(BENCHMARK_DIR)/$(1)-optimized-pipeline-$(2)-extract.time.txt" \
+		"$(BENCHMARK_DIR)/$(1)-optimized-pipeline-$(2)-filter.time.txt" \
+		"$(BENCHMARK_DIR)/$(1)-optimized-pipeline-$(2)-merge.time.txt" \
+		"$(BENCHMARK_DIR)/$(1)-optimized-pipeline-$(2)-planetiler.time.txt" \
+		"$(BENCHMARK_DIR)/$(1)-optimized-pipeline-$(2)-osmium-version.txt"
+	@"$(3)" --version > "$(BENCHMARK_DIR)/$(1)-optimized-pipeline-$(2)-osmium-version.txt"
+	/usr/bin/time -v -o "$(BENCHMARK_DIR)/$(1)-optimized-pipeline-$(2)-extract.time.txt" \
+		"$(3)" extract \
+			--config "$(PLANET_TILE_CONFIG)" \
+			--directory "$(PLANET_TILE_COMPLETE_WAYS_DIR)" \
+			--strategy="complete_ways" \
+			--overwrite \
+			"$(FULL_PLANET_PBF)"
+	@touch "$(PLANET_TILE_COMPLETE_WAYS_DIR)/.extract-complete"
+	/usr/bin/time -v -o "$(BENCHMARK_DIR)/$(1)-optimized-pipeline-$(2)-filter.time.txt" \
+		bash -lc 'set -euo pipefail; \
+		running=0; \
+		for tile in "$(PLANET_TILE_COMPLETE_WAYS_DIR)"/*.osm.pbf; do \
+			in="$$$$tile"; \
+			base=$$$$(basename "$$$$in"); \
+			"$(3)" tags-filter "$$$$in" $(PREFILTER_FILTER_$(1)) -o "$(PLANET_TILE_FILTER_DIR)/$(1)/$$$$base" --overwrite --no-progress & \
+			running=$$$$((running + 1)); \
+			if [ "$$$$running" -ge "$(PLANET_TILE_PARALLELISM)" ]; then \
+				wait -n; \
+				running=$$$$((running - 1)); \
+			fi; \
+		done; \
+		wait'
+	/usr/bin/time -v -o "$(BENCHMARK_DIR)/$(1)-optimized-pipeline-$(2)-merge.time.txt" \
+		"$(3)" merge \
+			"$(PLANET_TILE_FILTER_DIR)/$(1)"/*.osm.pbf \
+			-o "$(BENCHMARK_DIR)/$(1)-optimized-pipeline-$(2).osm.pbf" \
+			--overwrite --no-progress
+	@cp "theme/$(1)/schema.yml" "data/$(1)-optimized-pipeline-$(2).yml"
+	@sed -i 's|$(PREFILTER_SCHEMA_MATCH_$(1))|/data/benchmarks/$(1)-optimized-pipeline-$(2).osm.pbf|' "data/$(1)-optimized-pipeline-$(2).yml"
+	/usr/bin/time -v -o "$(BENCHMARK_DIR)/$(1)-optimized-pipeline-$(2)-planetiler.time.txt" \
+		docker run -u `id -u`:`id -g` --memory 64g --memory-swap -1 \
+			-e JAVA_TOOL_OPTIONS='$(JAVA_TOOL_OPTIONS_ZGC_32G) -XX:StartFlightRecording=filename=/data/benchmarks/$(1)-optimized-pipeline-$(2).jfr,settings=profile,dumponexit=true' \
+			-v "$(pwd)/data":/data \
+			-v "/everything/osm/planet":/osm_planet:ro \
+			$(DOCKER_IMAGE) generate-custom \
+				--schema=/data/$(1)-optimized-pipeline-$(2).yml \
+				--output=/data/benchmarks/$(1)-optimized-pipeline-$(2).pmtiles \
+				--force
+	@ls -lh "$(BENCHMARK_DIR)/$(1)-optimized-pipeline-$(2).pmtiles" "$(BENCHMARK_DIR)/$(1)-optimized-pipeline-$(2).jfr"
+	@echo "=== $(1) optimized pipeline ($(2)) end: $$$$(date -Iseconds) ==="
+endef
 
 .PHONY: planet-tiles-z2
 planet-tiles-z2: $(PLANET_TILE_DIR)/.extract-complete
@@ -624,6 +685,11 @@ $(eval $(call benchmark_tiled_tags_filter,railways,wr/railway))
 $(eval $(call benchmark_tiled_tags_filter,rivers,wr/waterway=river))
 $(eval $(call benchmark_planetiler_gc_prefilter,railways))
 $(eval $(call benchmark_planetiler_gc_prefilter,rivers))
+$(eval $(call benchmark_optimized_pipeline_with_osmium,railways,system,$(OSMIUM_SYSTEM)))
+$(eval $(call benchmark_optimized_pipeline_with_osmium,railways,$(OSMIUM_BEST_LABEL),$(OSMIUM_BEST)))
+
+.PHONY: railways-optimized-pipeline-compare
+railways-optimized-pipeline-compare: railways-optimized-pipeline-system railways-optimized-pipeline-best
 
 # Full planet.pbf input + JFR profiling (slow baseline).
 .PHONY: railways-profile
@@ -694,7 +760,7 @@ osmium-threads-bench-japan:
 		rm -f /tmp/osmium-bench-japan.pbf; \
 		echo ""; \
 		echo "--- OSMIUM_POOL_THREADS=$$T ---"; \
-		/usr/bin/time -v env OSMIUM_POOL_THREADS=$$T osmium tags-filter \
+		/usr/bin/time -v env OSMIUM_POOL_THREADS=$$T $(OSMIUM) tags-filter \
 			$(JAPAN_OSM_PBF) \
 			wr/railway \
 			-o /tmp/osmium-bench-japan.pbf \
@@ -710,7 +776,7 @@ osmium-threads-bench-planet:
 		rm -f /tmp/osmium-bench-planet.pbf; \
 		echo ""; \
 		echo "--- OSMIUM_POOL_THREADS=$$T ---"; \
-		/usr/bin/time -v env OSMIUM_POOL_THREADS=$$T osmium tags-filter \
+		/usr/bin/time -v env OSMIUM_POOL_THREADS=$$T $(OSMIUM) tags-filter \
 			$(FULL_PLANET_PBF) \
 			wr/railway \
 			-o /tmp/osmium-bench-planet.pbf \
