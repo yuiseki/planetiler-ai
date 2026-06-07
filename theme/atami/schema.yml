@@ -1,0 +1,51 @@
+schema_name: "Atami Editable"
+schema_description: "Buildings and roads with osm_id for the Atami area — base layer for editable vector tile PoC"
+attribution: "<a href=\"https://www.openstreetmap.org/copyright\" target=\"_blank\">&copy; OpenStreetMap contributors</a>"
+
+sources:
+  osm:
+    type: osm
+    local_path: /data/atami.osm.pbf
+
+layers:
+  - id: building
+    features:
+      - source: osm
+        geometry: polygon
+        min_zoom: 12
+        include_when:
+          building: __any__
+        attributes:
+          - key: osm_id
+            value: '${ feature.id }'
+          - key: osm_type
+            value: "way"
+          - key: name
+            value: '${ feature.tags.name }'
+          - key: building
+            value: '${ feature.tags.building }'
+          - key: building:levels
+            value: '${ feature.tags["building:levels"] }'
+          - key: addr:housenumber
+            value: '${ feature.tags["addr:housenumber"] }'
+
+  - id: road
+    features:
+      - source: osm
+        geometry: line
+        min_zoom: 10
+        include_when:
+          highway: __any__
+        attributes:
+          - key: osm_id
+            value: '${ feature.id }'
+          - key: highway
+            value: '${ feature.tags.highway }'
+          - key: name
+            value: '${ feature.tags.name }'
+          - key: oneway
+            value: '${ feature.tags.oneway }'
+          - key: surface
+            value: '${ feature.tags.surface }'
+          - key: maxspeed
+            value: '${ feature.tags.maxspeed }'

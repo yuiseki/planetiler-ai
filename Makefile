@@ -428,6 +428,37 @@ global_seismic_alerts:
 	@echo "1. Copy the style file: cp theme/global_seismic_alerts/style.json data/global_seismic_alerts.json"
 	@echo "2. Update data/config.json to include the new theme."
 
+# Atami area: building + road with osm_id, bbox-limited
+# STAC item 60e5afbe5bc2dc00058bbe06: bbox 139.068869,35.112867,139.081648,35.123595
+ATAMI_BBOX = 139.068869,35.112867,139.081648,35.123595
+
+.PHONY: atami
+atami: data/atami.osm.pbf
+	@echo "Generating theme: atami..."
+	@cp "theme/atami/schema.yml" "data/atami.yml"
+	docker run \
+	    -u `id -u`:`id -g` \
+	    --memory 4g --memory-swap -1 \
+	    -e JAVA_TOOL_OPTIONS="-Xms512m -Xmx2g" \
+	    -v "$(pwd)/data":/data \
+	    ghcr.io/onthegomap/planetiler:latest \
+	        generate-custom \
+	            --schema=/data/atami.yml \
+	            --output=/data/atami.mbtiles \
+	            --bounds=$(ATAMI_BBOX) \
+	            --force
+	@echo "atami.mbtiles generated."
+
+data/atami.osm.pbf:
+	@echo "Extracting Atami bbox from planet PBF with osmium..."
+	osmium extract \
+	    --bbox=$(ATAMI_BBOX) \
+	    --strategy=complete_ways \
+	    data/planet-latest.osm.pbf \
+	    -o data/atami.osm.pbf \
+	    --overwrite
+	@echo "atami.osm.pbf ready: $$(du -sh data/atami.osm.pbf | cut -f1)"
+
 .PHONY: custom
 custom:
 	docker run \

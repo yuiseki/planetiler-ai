@@ -1,0 +1,46 @@
+{
+  "version": 8,
+  "name": "Atami Editable",
+  "sources": {
+    "atami": {
+      "type": "vector",
+      "url": "mbtiles://{{atami}}"
+    }
+  },
+  "layers": [
+    {
+      "id": "building-fill",
+      "type": "fill",
+      "source": "atami",
+      "source-layer": "building",
+      "paint": {
+        "fill-color": "#4488ff",
+        "fill-opacity": 0.4
+      }
+    },
+    {
+      "id": "building-outline",
+      "type": "line",
+      "source": "atami",
+      "source-layer": "building",
+      "paint": {
+        "line-color": "#4488ff",
+        "line-width": 1
+      }
+    },
+    {
+      "id": "road",
+      "type": "line",
+      "source": "atami",
+      "source-layer": "road",
+      "paint": {
+        "line-color": "#ffaa44",
+        "line-width": [
+          "interpolate", ["linear"], ["zoom"],
+          10, 0.5,
+          14, 2
+        ]
+      }
+    }
+  ]
+}
